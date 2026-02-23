@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-background text-primary antialiased selection:bg-accent/30 selection:text-primary;
+    overflow-x: hidden;
+  }
+}
+
+@layer utilities {
+  .text-drama {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+  }
+}
+
+/* Magnetic Button Hover Effect Base */
+.magnetic-btn {
+  @apply relative overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)];
+}
+.magnetic-btn:hover {
+  transform: scale(1.03);
+}
+.magnetic-btn::before {
+  content: '';
+  @apply absolute inset-0 bg-accent translate-y-[100%] transition-transform duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] z-0;
+}
+.magnetic-btn:hover::before {
+  @apply translate-y-0;
+}
+.magnetic-btn > * {
+  @apply relative z-10;
+}
+
+/* Generic Utilities */
+.nav-link {
+  @apply relative inline-block transition-transform duration-300;
+}
+.nav-link:hover {
+  @apply -translate-y-[1px];
+}
