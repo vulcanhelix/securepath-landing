@@ -12,6 +12,7 @@ import Solutions from './pages/Solutions';
 import Methodology from './pages/Methodology';
 import Contact from './pages/Contact';
 import ServiceOffering from './pages/ServiceOffering';
+import Deck from './pages/Deck';
 import { LogoFull } from './components/Logo';
 
 // ===== NAVBAR ===== //
@@ -103,25 +104,45 @@ const ScrollToTop = () => {
   return null;
 }
 
+// ===== LAYOUT WRAPPER ===== //
+const AppLayout = () => {
+  const { pathname } = useLocation();
+  const isDeck = pathname === '/deck';
+
+  if (isDeck) {
+    return (
+      <main className="w-full h-screen bg-black overflow-hidden m-0 p-0">
+        <Routes>
+          <Route path="/deck" element={<Deck />} />
+        </Routes>
+      </main>
+    );
+  }
+
+  return (
+    <div className="w-full bg-background min-h-screen flex flex-col">
+      <Navbar />
+      <main className="flex-grow">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/solutions" element={<Solutions />} />
+          <Route path="/services/:slug" element={<ServiceOffering />} />
+          <Route path="/methodology" element={<Methodology />} />
+          <Route path="/contact" element={<Contact />} />
+        </Routes>
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
 // ===== APP WRAPPER ===== //
 function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <div className="w-full bg-background min-h-screen flex flex-col">
-        <Navbar />
-        <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/solutions" element={<Solutions />} />
-            <Route path="/services/:slug" element={<ServiceOffering />} />
-            <Route path="/methodology" element={<Methodology />} />
-            <Route path="/contact" element={<Contact />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
+      <AppLayout />
     </BrowserRouter>
   );
 }

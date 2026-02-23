@@ -16,6 +16,7 @@ export default {
         sans: ['Inter', 'sans-serif'],
         drama: ['Playfair Display', 'serif'],
         mono: ['JetBrains Mono', 'monospace'],
+        deck: ['Plus Jakarta Sans', 'sans-serif'],
       },
     },
   },
