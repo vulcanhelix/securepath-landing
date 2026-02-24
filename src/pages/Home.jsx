@@ -215,7 +215,7 @@ const Home = () => {
             
             <div className="md:col-span-6 md:col-start-7 space-y-12">
                <p className="text-2xl text-primary/70 font-light leading-relaxed">
-                  The modern threat landscape moves faster than static policies. We belong to the <strong className="text-white">Cyberwin Group of Companies</strong>, giving us access to deep, multi-sector adversarial intelligence. 
+                  The modern threat landscape moves faster than static policies. This gives us access to deep, multi-sector adversarial intelligence. 
                </p>
                <p className="text-lg text-primary/50 font-mono leading-relaxed">
                   Our consultancy bridges the catastrophic gap between boardroom objectives and technical execution. We do not just block threats. We map your data flows, audit your third-party perimeter, and build frameworks that anticipate attack vectors before they materialize.

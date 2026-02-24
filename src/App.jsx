@@ -63,7 +63,6 @@ const Footer = () => {
           </div>
           <p className="text-primary/60 max-w-sm mb-8 text-sm leading-relaxed font-mono">
             Elevate • Protect • Succeed <br />
-            Member of Cyberwin Group of Companies. <br/>
             Boutique expertise, bespoke solutions tailored to modern threats.
           </p>
           <div className="flex items-center gap-3 text-xs font-mono bg-dark/40 w-max px-4 py-2 rounded-full border border-white/5">

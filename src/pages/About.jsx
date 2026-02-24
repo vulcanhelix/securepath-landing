@@ -100,7 +100,7 @@ const About = () => {
                <Layers className="w-16 h-16 text-accent mb-8" />
                <h2 className="text-4xl md:text-6xl font-bold text-primary mb-6 font-sans">The Group</h2>
                <p className="text-2xl text-primary/80 font-light leading-relaxed max-w-3xl">
-                  By serving as your trusted partner and a proud member of the <span className="text-accent font-bold">Cyberwin Group of Companies</span>, we enable seamless digital transformation, foster absolute business resilience, and deliver scalable, zero-trust solutions.
+                  By serving as your trusted partner, we enable seamless digital transformation, foster absolute business resilience, and deliver scalable, zero-trust solutions.
                </p>
             </div>
          </div>
