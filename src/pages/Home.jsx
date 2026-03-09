@@ -243,10 +243,10 @@ const Home = () => {
          <div className="max-w-7xl mx-auto px-6 md:px-16 grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-8 relative z-10">
             <div className="flex flex-col items-center md:items-start text-center md:text-left">
                <div className="text-6xl md:text-8xl font-sans font-black text-white mb-4 tracking-tighter">
-                  <span className="metric-number" data-target="100" data-percent="true">0</span>
+                  <span className="metric-number" data-target="50" data-plus="true">0</span>
                </div>
-               <h4 className="text-xl font-bold text-accent mb-2">Compliance Retention</h4>
-               <p className="text-primary/50 text-sm font-mono max-w-xs">Zero client infractions across GDPR, POPIA, and PDPL architectures.</p>
+               <h4 className="text-xl font-bold text-accent mb-2">Data Risk Assessments Delivered</h4>
+               <p className="text-primary/50 text-sm font-mono max-w-xs">Comprehensive gap analyses and remediation roadmaps delivered across GDPR, POPIA, and PDPL mandates.</p>
             </div>
             <div className="flex flex-col items-center md:items-start text-center md:text-left">
                <div className="text-6xl md:text-8xl font-sans font-black text-white mb-4 tracking-tighter">
