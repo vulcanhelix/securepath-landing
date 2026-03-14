@@ -44,6 +44,8 @@ const Navbar = () => {
         <Link to="/about" className="nav-link text-primary/80 hover:text-accent">About</Link>
         <Link to="/solutions" className="nav-link text-primary/80 hover:text-accent">Solutions</Link>
         <Link to="/methodology" className="nav-link text-primary/80 hover:text-accent">Methodology</Link>
+        <a href="/assessments/gdpr-assessment.html" className="nav-link text-primary/80 hover:text-accent">GDPR Assessment</a>
+        <a href="/assessments/popia-assessment.html" className="nav-link text-primary/80 hover:text-accent">POPIA Assessment</a>
       </div>
       <Link to="/contact" className="magnetic-btn bg-accent text-background px-5 py-2 rounded-full text-sm font-semibold flex items-center gap-2">
         <span>Contact</span>
@@ -77,6 +79,8 @@ const Footer = () => {
             <li><Link to="/about" className="hover:text-accent transition-colors">About Us</Link></li>
             <li><Link to="/solutions" className="hover:text-accent transition-colors">Solutions</Link></li>
             <li><Link to="/methodology" className="hover:text-accent transition-colors">Methodology</Link></li>
+            <li><a href="/assessments/gdpr-assessment.html" className="hover:text-accent transition-colors">GDPR Assessment</a></li>
+            <li><a href="/assessments/popia-assessment.html" className="hover:text-accent transition-colors">POPIA Assessment</a></li>
           </ul>
         </div>
         
