@@ -1687,8 +1687,8 @@ async function submitAssessmentData(sc, risk) {
       clientName: CLIENT.company,
       clientEmail: CLIENT.email,
       companyName: CLIENT.company,
-      overallScore: sc.s,
-      maxScore: sc.m,
+      overallScore: sc.tot,
+      maxScore: sc.mx,
       verdict: risk.label,
       categoryScores,
       answers
@@ -1706,11 +1706,14 @@ async function submitAssessmentData(sc, risk) {
     const result = await response.json();
     if (result.success) {
       console.log('Assessment submitted and emails sent successfully');
+      showToast('Your results have been submitted successfully! Check your email for a copy.', 5000);
     } else {
       console.error('Error submitting assessment:', result.error);
+      showToast('Results saved locally. Email delivery may be delayed.', 4000);
     }
   } catch (error) {
     console.error('Error submitting assessment:', error);
+    showToast('Results saved locally. Email delivery may be delayed.', 4000);
   }
 }
 
@@ -2087,10 +2090,10 @@ function drawStackedBar(sc) {
 // ════════════════════════════════════════════════════════════
 // UTILS
 // ════════════════════════════════════════════════════════════
-function showToast(msg) {
+function showToast(msg, duration) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3200);
+  setTimeout(() => t.classList.remove('show'), duration || 3200);
 }
 
 function retake() {
