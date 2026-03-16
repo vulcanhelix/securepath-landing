@@ -1660,6 +1660,58 @@ function genReport() {
     drawDistBars(sc);
     drawStackedBar(sc);
   }, 80);
+
+  submitAssessmentData(sc, risk);
+}
+
+async function submitAssessmentData(sc, risk) {
+  try {
+    const categoryScores = {};
+    SECTIONS.forEach((sec, i) => {
+      categoryScores[sec.name] = {
+        current: sc.secs[i].s,
+        max: sc.secs[i].m
+      };
+    });
+
+    const answers = SECTIONS.flatMap((sec, sIdx) =>
+      sec.qs.map((q, qIdx) => ({
+        question: q.text,
+        answer: ANS[q.id] === 'yes' ? 'Yes' : ANS[q.id] === 'no' ? 'No' : ANS[q.id] === 'partial' ? 'Partial' : 'N/A',
+        score: SCORE[ANS[q.id]] || 0
+      }))
+    );
+
+    const assessmentData = {
+      assessmentType: 'UK GDPR & DUAA 2025',
+      clientName: CLIENT.company,
+      clientEmail: CLIENT.email,
+      companyName: CLIENT.company,
+      overallScore: sc.s,
+      maxScore: sc.m,
+      verdict: risk.label,
+      categoryScores,
+      answers
+    };
+
+    const response = await fetch('https://otejfaexpeogkapegnom.supabase.co/functions/v1/submit-assessment', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im90ZWpmYWV4cGVvZ2thcGVnbm9tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2ODk2NzcsImV4cCI6MjA4OTI2NTY3N30.DNsH3jm0m7GJ_QQiLxGexCiEurrQ6X0dtyMMt-4Jm-k'
+      },
+      body: JSON.stringify(assessmentData)
+    });
+
+    const result = await response.json();
+    if (result.success) {
+      console.log('Assessment submitted and emails sent successfully');
+    } else {
+      console.error('Error submitting assessment:', result.error);
+    }
+  } catch (error) {
+    console.error('Error submitting assessment:', error);
+  }
 }
 
 function buildRecs(sc) {

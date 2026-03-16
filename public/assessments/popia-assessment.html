@@ -1604,6 +1604,54 @@ function submitAssessment(){
       setTimeout(()=>{document.getElementById('cbf'+i).style.width=p+'%';},300+i*80);
     });
   },80);
+
+  submitPOPIAAssessment(total, max, verdict, catScores, catMax, scoreMap);
+}
+
+async function submitPOPIAAssessment(total, max, verdict, catScores, catMax, scoreMap) {
+  try {
+    const categoryScores = {
+      'Compliance Foundations': { current: catScores[0], max: catMax[0] },
+      'Data Rights & Obligations': { current: catScores[1], max: catMax[1] },
+      'Security & Accountability': { current: catScores[2], max: catMax[2] }
+    };
+
+    const answers = QUESTIONS.map((q, idx) => ({
+      question: q.question,
+      answer: answers[q.id] ? answers[q.id].label : 'N/A',
+      score: scoreMap[q.id] || 0
+    }));
+
+    const assessmentData = {
+      assessmentType: 'POPIA',
+      clientName: CLIENT.name,
+      clientEmail: CLIENT.email,
+      companyName: CLIENT.org || CLIENT.name,
+      overallScore: total,
+      maxScore: max,
+      verdict: verdict,
+      categoryScores,
+      answers
+    };
+
+    const response = await fetch('https://otejfaexpeogkapegnom.supabase.co/functions/v1/submit-assessment', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im90ZWpmYWV4cGVvZ2thcGVnbm9tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2ODk2NzcsImV4cCI6MjA4OTI2NTY3N30.DNsH3jm0m7GJ_QQiLxGexCiEurrQ6X0dtyMMt-4Jm-k'
+      },
+      body: JSON.stringify(assessmentData)
+    });
+
+    const result = await response.json();
+    if (result.success) {
+      console.log('Assessment submitted and emails sent successfully');
+    } else {
+      console.error('Error submitting assessment:', result.error);
+    }
+  } catch (error) {
+    console.error('Error submitting assessment:', error);
+  }
 }
 
 function drawRing(score, max, col){
