@@ -314,7 +314,7 @@ Deno.serve(async (req: Request) => {
         "Authorization": `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "SecurePath Consulting <assessments@securepathconsulting.co.za>",
+        from: "SecurePath Consulting <onboarding@resend.dev>",
         to: [data.clientEmail],
         subject: `Your ${data.assessmentType} Assessment Results - SecurePath Consulting`,
         html: clientEmailHTML,
@@ -329,7 +329,7 @@ Deno.serve(async (req: Request) => {
         "Authorization": `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "SecurePath Assessment System <assessments@securepathconsulting.co.za>",
+        from: "SecurePath Assessment System <onboarding@resend.dev>",
         to: ["William.D@securepathconsulting.co.za", "Bruce.M@securepathconsulting.co.za"],
         subject: `🚨 New ${data.assessmentType} Assessment Completed - ${data.clientName}${data.companyName ? ` (${data.companyName})` : ''}`,
         html: teamEmailHTML,
