@@ -315,7 +315,7 @@ Deno.serve(async (req: Request) => {
       },
       body: JSON.stringify({
         from: "SecurePath Consulting <onboarding@resend.dev>",
-        to: [data.clientEmail],
+        to: ["bruce.m@securepathconsulting.co.za"],
         subject: `Your ${data.assessmentType} Assessment Results - SecurePath Consulting`,
         html: clientEmailHTML,
       }),
@@ -330,7 +330,7 @@ Deno.serve(async (req: Request) => {
       },
       body: JSON.stringify({
         from: "SecurePath Assessment System <onboarding@resend.dev>",
-        to: ["William.D@securepathconsulting.co.za", "Bruce.M@securepathconsulting.co.za"],
+        to: ["bruce.m@securepathconsulting.co.za"],
         subject: `🚨 New ${data.assessmentType} Assessment Completed - ${data.clientName}${data.companyName ? ` (${data.companyName})` : ''}`,
         html: teamEmailHTML,
       }),
