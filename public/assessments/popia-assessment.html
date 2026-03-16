@@ -1617,8 +1617,8 @@ async function submitPOPIAAssessment(total, max, verdict, catScores, catMax, sco
     };
 
     const answerList = QUESTIONS.map((q, idx) => ({
-      question: q.question,
-      answer: answers[q.id] ? answers[q.id].label : 'N/A',
+      question: q.text,
+      answer: answers[q.id] !== undefined ? q.options[answers[q.id].optIndex].label : 'N/A',
       score: scoreMap[q.id] || 0
     }));
 
