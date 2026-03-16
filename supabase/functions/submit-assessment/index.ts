@@ -288,9 +288,15 @@ Deno.serve(async (req: Request) => {
 
   try {
     const data: AssessmentData = await req.json();
+    console.log("Received assessment data:", {
+      type: data.assessmentType,
+      client: data.clientEmail,
+      score: data.overallScore
+    });
 
     const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
     if (!RESEND_API_KEY) {
+      console.error("RESEND_API_KEY not configured");
       throw new Error("RESEND_API_KEY not configured");
     }
 
@@ -300,6 +306,7 @@ Deno.serve(async (req: Request) => {
     const clientEmailHTML = getClientConfirmationHTML(data);
     const teamEmailHTML = getTeamNotificationHTML(data);
 
+    console.log("Sending client email to:", data.clientEmail);
     const clientEmailPromise = fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -314,6 +321,7 @@ Deno.serve(async (req: Request) => {
       }),
     });
 
+    console.log("Sending team notification emails");
     const teamEmailPromise = fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -335,6 +343,17 @@ Deno.serve(async (req: Request) => {
 
     const clientEmailResult = await clientEmailResponse.json();
     const teamEmailResult = await teamEmailResponse.json();
+
+    console.log("Client email response:", {
+      ok: clientEmailResponse.ok,
+      status: clientEmailResponse.status,
+      result: clientEmailResult
+    });
+    console.log("Team email response:", {
+      ok: teamEmailResponse.ok,
+      status: teamEmailResponse.status,
+      result: teamEmailResult
+    });
 
     if (SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY) {
       const { createClient } = await import("npm:@supabase/supabase-js@2");
