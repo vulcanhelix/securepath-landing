@@ -13,6 +13,8 @@ import Methodology from './pages/Methodology';
 import Contact from './pages/Contact';
 import ServiceOffering from './pages/ServiceOffering';
 import Deck from './pages/Deck';
+import Insights from './pages/Insights';
+import InsightPost from './pages/InsightPost';
 import { LogoFull } from './components/Logo';
 
 // ===== NAVBAR ===== //
@@ -44,6 +46,7 @@ const Navbar = () => {
         <Link to="/about" className="nav-link text-primary/80 hover:text-accent">About</Link>
         <Link to="/solutions" className="nav-link text-primary/80 hover:text-accent">Solutions</Link>
         <Link to="/methodology" className="nav-link text-primary/80 hover:text-accent">Methodology</Link>
+        <Link to="/insights" className="nav-link text-primary/80 hover:text-accent">Insights</Link>
         <a href="/assessments/gdpr-assessment.html" className="nav-link text-primary/80 hover:text-accent">GDPR Assessment</a>
         <a href="/assessments/popia-assessment.html" className="nav-link text-primary/80 hover:text-accent">POPIA Assessment</a>
       </div>
@@ -79,6 +82,7 @@ const Footer = () => {
             <li><Link to="/about" className="hover:text-accent transition-colors">About Us</Link></li>
             <li><Link to="/solutions" className="hover:text-accent transition-colors">Solutions</Link></li>
             <li><Link to="/methodology" className="hover:text-accent transition-colors">Methodology</Link></li>
+            <li><Link to="/insights" className="hover:text-accent transition-colors">Insights</Link></li>
             <li><a href="/assessments/gdpr-assessment.html" className="hover:text-accent transition-colors">GDPR Assessment</a></li>
             <li><a href="/assessments/popia-assessment.html" className="hover:text-accent transition-colors">POPIA Assessment</a></li>
           </ul>
@@ -132,6 +136,8 @@ const AppLayout = () => {
           <Route path="/solutions" element={<Solutions />} />
           <Route path="/services/:slug" element={<ServiceOffering />} />
           <Route path="/methodology" element={<Methodology />} />
+          <Route path="/insights" element={<Insights />} />
+          <Route path="/insights/:slug" element={<InsightPost />} />
           <Route path="/contact" element={<Contact />} />
         </Routes>
       </main>
