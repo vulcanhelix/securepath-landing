@@ -1037,10 +1037,130 @@ canvas#scoreArc{display:block}
 
 /* Print */
 @media print{
-  .site-hdr,.assess-topbar,.results-bar,#screen-welcome,#screen-assessment,#screen-modal{display:none!important}
-  #screen-results{display:block!important}
-  body{background:#fff;color:#000}
-  :root{--bg:#121620;--bg2:#0f141d;--bg3:#090d14;--panel:#090d14;--panel2:#05070a;--border:#ddd;--border2:#ccc;--border3:#bbb;--ink:#000;--ink2:#111;--ink3:#444;--dim:#888;--green:#0f766e;--green-dim:rgba(15,118,110,.08);--green-border:rgba(15,118,110,.25)}
+  *{transition:none!important;animation:none!important}
+  body{
+    background:#fff!important;color:#000!important;
+    print-color-adjust:exact;-webkit-print-color-adjust:exact;
+  }
+  :root{
+    --bg:#fff;--bg2:#f8f9fa;--bg3:#f1f3f5;
+    --panel:#fff;--panel2:#f8f9fa;
+    --border:#ddd;--border2:#ccc;--border3:#bbb;
+    --ink:#000;--ink2:#111;--ink3:#444;--dim:#888;
+    --green:#0f766e;--green-dim:rgba(15,118,110,.08);--green-border:rgba(15,118,110,.25);
+    --red:#dc2626;--amber:#d97706;
+  }
+
+  .site-hdr,.assess-topbar,.results-bar,#screen-welcome,#screen-assessment,#screen-modal,#toast,#embed-footer{display:none!important}
+  #screen-results{display:block!important;padding:0!important}
+
+  body::before{display:none!important}
+  .results-body::before,.results-body::after{display:none!important}
+
+  .results-body{max-width:100%;padding:32px 40px 0!important}
+
+  .score-hero{
+    background:#f8fafb!important;border:1px solid #ddd!important;
+    backdrop-filter:none!important;border-radius:12px!important;
+    padding:28px 32px!important;margin-bottom:32px!important;
+  }
+  .score-hero::before{display:none!important}
+
+  .score-tiles{gap:8px!important}
+  .stile{
+    background:#f8f9fa!important;border:1px solid #ddd!important;
+    backdrop-filter:none!important;border-radius:8px!important;
+    padding:12px 8px!important;
+  }
+
+  .cbar{
+    background:#f8f9fa!important;border:1px solid #ddd!important;
+    backdrop-filter:none!important;border-radius:8px!important;
+    padding:14px 18px!important;
+  }
+  .cbar::before{display:none!important}
+  .cbar-track{
+    background:#e5e7eb!important;border:1px solid #d1d5db!important;
+  }
+  .cbar-fill{
+    box-shadow:none!important;opacity:1!important;
+    print-color-adjust:exact;-webkit-print-color-adjust:exact;
+  }
+
+  .exp-card{
+    background:#f8f9fa!important;border:1px solid #ddd!important;
+    backdrop-filter:none!important;border-radius:12px!important;
+    padding:24px 18px!important;
+  }
+  .exp-card::before{
+    box-shadow:none!important;opacity:1!important;
+    print-color-adjust:exact;-webkit-print-color-adjust:exact;
+  }
+  .exp-card.critical::before{background:var(--red)!important}
+  .exp-card.moderate::before{background:var(--amber)!important}
+  .exp-card.lower::before{background:var(--green)!important}
+  .exp-n{text-shadow:none!important}
+
+  .pen-box{
+    background:rgba(220,38,38,0.05)!important;
+    border:1px solid rgba(220,38,38,0.25)!important;
+    backdrop-filter:none!important;border-radius:8px!important;
+  }
+  .pen-box::before{
+    print-color-adjust:exact;-webkit-print-color-adjust:exact;
+  }
+
+  .action-card{
+    background:#f8f9fa!important;border:1px solid #ddd!important;
+    backdrop-filter:none!important;border-radius:12px!important;
+    padding:20px 24px!important;
+  }
+  .action-icon{
+    print-color-adjust:exact;-webkit-print-color-adjust:exact;
+    box-shadow:none!important;
+  }
+  .action-pri,.verdict-pill{
+    print-color-adjust:exact;-webkit-print-color-adjust:exact;
+  }
+  .action-consequence{
+    background:#f1f3f5!important;
+    border-left:3px solid #bbb!important;
+  }
+
+  .cta-banner{
+    background:#f0fdf4!important;
+    border:1px solid rgba(15,118,110,0.3)!important;
+    backdrop-filter:none!important;border-radius:12px!important;
+    padding:32px!important;margin-top:40px!important;
+    flex-direction:column!important;gap:24px!important;
+  }
+  .cta-banner::before,.cta-banner::after{display:none!important}
+  .cta-btn-primary{
+    background:var(--green)!important;color:#fff!important;
+    print-color-adjust:exact;-webkit-print-color-adjust:exact;
+    box-shadow:none!important;
+  }
+  .cta-btn-outline{box-shadow:none!important}
+
+  .rpt-footer{
+    margin-top:40px!important;
+    border-top:1px solid #ddd!important;
+  }
+  .rpt-rule{
+    background:var(--green)!important;box-shadow:none!important;
+    opacity:0.4!important;
+  }
+
+  .score-hero,.rpt-sec,.action-card,.exp-card,.pen-box,.cta-banner,.cbar{
+    break-inside:avoid;page-break-inside:avoid;
+  }
+  .rpt-sec{
+    break-before:auto;page-break-before:auto;
+  }
+  .action-list{gap:12px!important}
+  .exposure-row{gap:12px!important}
+
+  .rbtn{display:none!important}
 }
 
 @media(max-width:943px){
@@ -1598,6 +1718,7 @@ function submitAssessment(){
   showScreen('screen-results');
 
   setTimeout(()=>{
+    _lastRingArgs = {score:total, max:max, col:riskColor};
     drawRing(total, max, riskColor);
     [0,1,2].forEach(i=>{
       const s=catScores[i],m=catMax[i],p=Math.round(s/m*100);
@@ -1686,6 +1807,37 @@ function showToast(msg,duration){
   t.textContent=msg;t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),duration||3000);
 }
+
+let _lastRingArgs = null;
+
+function drawRingForPrint(score, max, col){
+  const cv = document.getElementById('scoreArc'); if(!cv)return;
+  const ctx = cv.getContext('2d');
+  const cx=65,cy=65,R=52,lw=9;
+  ctx.clearRect(0,0,130,130);
+  ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);
+  ctx.strokeStyle='#e5e7eb';ctx.lineWidth=lw;ctx.stroke();
+  const end = -Math.PI/2+(score/max)*Math.PI*2;
+  ctx.beginPath();ctx.arc(cx,cy,R,-Math.PI/2,end);
+  ctx.strokeStyle=col;ctx.lineWidth=lw;ctx.lineCap='round';
+  ctx.stroke();
+  ctx.font='bold 20px Inter,sans-serif';ctx.fillStyle=col;ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(Math.round(score/max*100)+'%',cx,cy-6);
+  ctx.font='9px JetBrains Mono,monospace';ctx.fillStyle='#888';
+  ctx.fillText(score+'/'+max+' pts',cx,cy+10);
+}
+
+window.addEventListener('beforeprint',function(){
+  if(_lastRingArgs){
+    var col = _lastRingArgs.col;
+    if(col==='#f73c2b') col='#dc2626';
+    if(col==='#3afe83') col='#0f766e';
+    drawRingForPrint(_lastRingArgs.score, _lastRingArgs.max, col);
+  }
+});
+window.addEventListener('afterprint',function(){
+  if(_lastRingArgs) drawRing(_lastRingArgs.score, _lastRingArgs.max, _lastRingArgs.col);
+});
 
 function printReport(){
   showToast('Tip: In the print dialog, choose "Save as PDF" to download.',4000);
