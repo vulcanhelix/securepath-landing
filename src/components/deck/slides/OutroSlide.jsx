@@ -46,7 +46,7 @@ const OutroSlide = () => (
         
         <div className="flex items-center gap-4">
           <Mail className="w-[clamp(24px,2vw,32px)] h-[clamp(24px,2vw,32px)] text-white" strokeWidth="2" />
-          <span className="text-[clamp(13px,1.1vw,20px)] opacity-90 text-white">william@securepathconsulting.co.za</span>
+          <span className="text-[clamp(13px,1.1vw,20px)] opacity-90 text-white">william.d@securepathconsulting.co.za</span>
         </div>
 
         <div className="flex items-center gap-4">

@@ -51,11 +51,11 @@ const Contact = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-3xl border-t border-primary/20 pt-16">
            {/* Vault Button 1 */}
-           <a href="mailto:william@securepathconsulting.co.za" className="bg-transparent border border-primary/30 p-10 hover:bg-primary text-primary hover:text-background transition-colors duration-500 flex flex-col items-start justify-between min-h-[250px] group relative overflow-hidden">
+           <a href="mailto:william.d@securepathconsulting.co.za" className="bg-transparent border border-primary/30 p-10 hover:bg-primary text-primary hover:text-background transition-colors duration-500 flex flex-col items-start justify-between min-h-[250px] group relative overflow-hidden">
               <Mail className="w-10 h-10 mb-8 opacity-50 group-hover:opacity-100 transition-opacity" />
               <div>
                  <h3 className="font-bold text-2xl font-sans mb-3">Secure Transmission</h3>
-                 <p className="font-mono text-sm opacity-60 group-hover:opacity-100">william@securepathconsulting.co.za</p>
+                 <p className="font-mono text-sm opacity-60 group-hover:opacity-100">william.d@securepathconsulting.co.za</p>
               </div>
               <ArrowRight className="absolute bottom-10 right-10 w-6 h-6 transform -translate-x-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
            </a>

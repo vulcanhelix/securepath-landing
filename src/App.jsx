@@ -87,7 +87,7 @@ const Footer = () => {
         <div>
           <h4 className="font-bold mb-6 text-accent">Contact</h4>
           <ul className="space-y-4 text-sm text-primary/70 font-mono">
-            <li><a href="mailto:william@Securepathconsulting.co.za" className="hover:text-white transition-colors">william@securepathconsulting.co.za</a></li>
+            <li><a href="mailto:william.d@securepathconsulting.co.za" className="hover:text-white transition-colors">william.d@securepathconsulting.co.za</a></li>
             <li><a href="https://www.securepathconsulting.co.za" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">www.securepathconsulting.co.za</a></li>
           </ul>
         </div>
