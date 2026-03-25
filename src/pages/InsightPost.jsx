@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { getInsightBySlug, getInsightsByCategory, formatDate } from '../utils/insights';
+import AudioPlayer from '../components/AudioPlayer';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -99,6 +100,7 @@ const InsightPost = () => {
   const [related, setRelated] = useState([]);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [audioUrl, setAudioUrl] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -113,6 +115,7 @@ const InsightPost = () => {
         return;
       }
       setPost(data);
+      setAudioUrl(data.audio_url || null);
       setLoading(false);
 
       getInsightsByCategory(data.category, 3, slug).then((rel) => {
@@ -249,6 +252,14 @@ const InsightPost = () => {
       </div>
 
       <div className="max-w-3xl mx-auto px-6 pb-24">
+        <div className="mb-12 post-hero-fade">
+          <AudioPlayer
+            audioUrl={audioUrl}
+            slug={slug}
+            onAudioGenerated={(url) => setAudioUrl(url)}
+          />
+        </div>
+
         {Array.isArray(post.content) && post.content.map((section, i) => (
           <div key={i} className="article-section">
             <ArticleSection section={section} />
