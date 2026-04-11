@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /deck
 
-Sitemap: https://www.securepathconsulting.co.za/sitemap.xml
+Sitemap: https://securepathconsulting.co.za/sitemap.xml
