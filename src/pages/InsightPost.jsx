@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { getInsightBySlug, getInsightsByCategory, formatDate } from '../utils/insights';
 import AudioPlayer from '../components/AudioPlayer';
+import { CURRENT_AUDIO_VERSION, getAudioStatus } from '../utils/audioConfig';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -94,18 +95,20 @@ const ArticleSection = ({ section }) => {
 
 const InsightPost = () => {
   const { slug } = useParams();
-  const navigate = useNavigate();
   const containerRef = useRef(null);
   const [post, setPost] = useState(null);
   const [related, setRelated] = useState([]);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [audioUrl, setAudioUrl] = useState(null);
+  const [audioStatus, setAudioStatus] = useState('missing');
 
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
     setNotFound(false);
+    setAudioUrl(null);
+    setAudioStatus('missing');
 
     getInsightBySlug(slug).then((data) => {
       if (cancelled) return;
@@ -114,8 +117,11 @@ const InsightPost = () => {
         setLoading(false);
         return;
       }
+
+      const initialAudioStatus = getAudioStatus(data);
       setPost(data);
-      setAudioUrl(data.audio_url || null);
+      setAudioStatus(initialAudioStatus);
+      setAudioUrl(initialAudioStatus === 'ready' ? data.audio_url : null);
       setLoading(false);
 
       getInsightsByCategory(data.category, 3, slug).then((rel) => {
@@ -256,7 +262,16 @@ const InsightPost = () => {
           <AudioPlayer
             audioUrl={audioUrl}
             slug={slug}
-            onAudioGenerated={(url) => setAudioUrl(url)}
+            status={audioStatus}
+            onAudioGenerated={(url) => {
+              setAudioUrl(url);
+              setAudioStatus('ready');
+              setPost((current) => (
+                current
+                  ? { ...current, audio_url: url, audio_version: CURRENT_AUDIO_VERSION }
+                  : current
+              ));
+            }}
           />
         </div>
 

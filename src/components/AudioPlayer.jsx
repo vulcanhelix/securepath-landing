@@ -37,7 +37,7 @@ const SpinnerIcon = () => (
   </svg>
 );
 
-const AudioPlayer = ({ audioUrl, slug, onAudioGenerated }) => {
+const AudioPlayer = ({ audioUrl, slug, status = 'missing', onAudioGenerated }) => {
   const audioRef = useRef(null);
   const progressRef = useRef(null);
 
@@ -54,6 +54,12 @@ const AudioPlayer = ({ audioUrl, slug, onAudioGenerated }) => {
       audioRef.current.playbackRate = SPEEDS[speedIndex];
     }
   }, [speedIndex]);
+
+  useEffect(() => {
+    setIsPlaying(false);
+    setCurrentTime(0);
+    setDuration(0);
+  }, [audioUrl]);
 
   // Set up audio event listeners
   useEffect(() => {
@@ -132,8 +138,11 @@ const AudioPlayer = ({ audioUrl, slug, onAudioGenerated }) => {
     }
   }, [slug, onAudioGenerated]);
 
-  // Generate button state (no audio yet)
-  if (!audioUrl) {
+  const isReady = status === 'ready' && !!audioUrl;
+  const isStale = status === 'stale';
+  const ctaLabel = error ? 'Try again' : isStale ? 'Generate updated narration' : 'Generate audio';
+
+  if (!isReady) {
     return (
       <div className="bg-[#0B0E14] border border-accent/10 rounded-lg p-4">
         <div className="flex items-center gap-3">
@@ -149,6 +158,12 @@ const AudioPlayer = ({ audioUrl, slug, onAudioGenerated }) => {
           <p className="mt-3 text-red-400/80 text-sm font-mono">{error}</p>
         )}
 
+        {isStale && !error && (
+          <p className="mt-3 text-primary/50 text-sm leading-relaxed">
+            This article has an older narration file. Generate the updated South African voice version.
+          </p>
+        )}
+
         <button
           onClick={handleGenerate}
           disabled={isGenerating}
@@ -162,7 +177,7 @@ const AudioPlayer = ({ audioUrl, slug, onAudioGenerated }) => {
           ) : (
             <>
               <PlayIcon />
-              <span>{error ? 'Try again' : 'Generate audio'}</span>
+              <span>{ctaLabel}</span>
             </>
           )}
         </button>
