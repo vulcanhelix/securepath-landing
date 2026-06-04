@@ -1,44 +1,235 @@
-import React, { useEffect, useRef } from 'react';
+import React, { Suspense, lazy, useEffect, useMemo, useState } from 'react';
 import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
-
-// Import Pages (to be created)
-import Home from './pages/Home';
-import About from './pages/About';
-import Solutions from './pages/Solutions';
-import Methodology from './pages/Methodology';
-import Contact from './pages/Contact';
-import ServiceOffering from './pages/ServiceOffering';
-import Deck from './pages/Deck';
-import Insights from './pages/Insights';
-import InsightPost from './pages/InsightPost';
 import { LogoFull } from './components/Logo';
+import Home from './pages/Home';
+
+const About = lazy(() => import('./pages/About'));
+const Solutions = lazy(() => import('./pages/Solutions'));
+const Methodology = lazy(() => import('./pages/Methodology'));
+const Contact = lazy(() => import('./pages/Contact'));
+const ServiceOffering = lazy(() => import('./pages/ServiceOffering'));
+const Deck = lazy(() => import('./pages/Deck'));
+const Insights = lazy(() => import('./pages/Insights'));
+const InsightPost = lazy(() => import('./pages/InsightPost'));
+
+const SITE_URL = 'https://securepathconsulting.co.za';
+
+const defaultMeta = {
+  title: 'Securepath Consulting | Cybersecurity and Data Protection',
+  description:
+    'Securepath Consulting helps organisations in South Africa and beyond strengthen cybersecurity, POPIA, GDPR, privacy, and third-party risk programmes.',
+};
+
+const routeMeta = {
+  '/': defaultMeta,
+  '/about': {
+    title: 'About Securepath Consulting | Boutique Cybersecurity Expertise',
+    description:
+      'Learn how Securepath Consulting combines cybersecurity strategy, privacy compliance, and bespoke professional services for resilient digital operations.',
+  },
+  '/solutions': {
+    title: 'Cybersecurity and Privacy Solutions | Securepath Consulting',
+    description:
+      'Explore Securepath Consulting services for privacy assessments, third-party risk, security posture, framework engineering, and Microsoft 365 audits.',
+  },
+  '/methodology': {
+    title: 'Client-Centric Cybersecurity Methodology | Securepath Consulting',
+    description:
+      'See Securepath Consulting\'s discovery, implementation, and continuous optimisation methodology for practical cybersecurity and data protection programmes.',
+  },
+  '/insights': {
+    title: 'Cybersecurity and Privacy Insights | Securepath Consulting',
+    description:
+      'Read Securepath Consulting insights on POPIA, GDPR, cybersecurity, data governance, privacy, compliance, and regulatory readiness.',
+  },
+  '/contact': {
+    title: 'Contact Securepath Consulting | Start a Security Audit',
+    description:
+      'Contact Securepath Consulting to discuss cybersecurity, POPIA, GDPR, third-party risk, privacy, and Microsoft 365 security requirements.',
+  },
+  '/deck': {
+    title: 'Securepath Consulting Presentation Deck',
+    description: 'Internal Securepath Consulting presentation deck.',
+    robots: 'noindex,nofollow',
+  },
+};
+
+const serviceMeta = {
+  'cybersecurity-services': {
+    title: 'Cybersecurity and Data Protection Services | Securepath Consulting',
+    description:
+      'Secure critical assets with cybersecurity assessments, secure architecture, incident response planning, and data protection strategy.',
+  },
+  'dsar-management': {
+    title: 'Managed DSAR Service | Securepath Consulting',
+    description:
+      'Outsource data subject access request handling across South Africa, the United Kingdom, and Mauritius with compliant workflows and clear documentation.',
+  },
+  'information-officer': {
+    title: 'Information Officer as a Service | Securepath Consulting',
+    description:
+      'Get outsourced POPIA Information Officer leadership, regulator liaison, privacy governance, policy management, and compliance monitoring.',
+  },
+  'microsoft-365-audit': {
+    title: 'Microsoft 365 Security Audit | Securepath Consulting',
+    description:
+      'Identify Microsoft 365 misconfigurations, access risks, phishing exposure, audit trail gaps, and hardening priorities.',
+  },
+  'privacy-audit': {
+    title: 'Comprehensive Privacy Audit | Securepath Consulting',
+    description:
+      'Assess POPIA, GDPR, data mapping, privacy notices, vendor controls, and operational data protection practices with a practical remediation roadmap.',
+  },
+  'security-posture-assessment': {
+    title: 'Security Posture Assessment | Securepath Consulting',
+    description:
+      'Evaluate security controls, vulnerability exposure, incident readiness, and regulatory alignment against modern threat vectors.',
+  },
+  'third-party-risk': {
+    title: 'Third-Party Risk Management | Securepath Consulting',
+    description:
+      'Map vendors, assess third-party cyber and privacy controls, and improve supply-chain security governance.',
+  },
+  'customized-privacy-program': {
+    title: 'Customized Privacy Program | Securepath Consulting',
+    description:
+      'Build a scalable privacy programme with data flow mapping, DPIAs, policy development, training, and measurable implementation priorities.',
+  },
+};
+
+const ensureMeta = (selector, attributes) => {
+  let element = document.head.querySelector(selector);
+  if (!element) {
+    element = document.createElement('meta');
+    document.head.appendChild(element);
+  }
+  Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, value));
+};
+
+const ensureLink = (rel, href) => {
+  let element = document.head.querySelector(`link[rel="${rel}"]`);
+  if (!element) {
+    element = document.createElement('link');
+    element.setAttribute('rel', rel);
+    document.head.appendChild(element);
+  }
+  element.setAttribute('href', href);
+};
+
+const getRouteMeta = (pathname) => {
+  if (pathname.startsWith('/services/')) {
+    const slug = pathname.split('/services/')[1];
+    return serviceMeta[slug] || routeMeta['/solutions'];
+  }
+
+  if (pathname.startsWith('/insights/')) {
+    return {
+      title: 'Cybersecurity and Privacy Insight | Securepath Consulting',
+      description:
+        'Securepath Consulting insight on practical privacy, compliance, cybersecurity, and data governance readiness.',
+    };
+  }
+
+  return routeMeta[pathname] || {
+    title: 'Page Not Found | Securepath Consulting',
+    description: 'The requested Securepath Consulting page could not be found.',
+    robots: 'noindex,follow',
+  };
+};
+
+const SeoManager = () => {
+  const { pathname } = useLocation();
+  const meta = useMemo(() => getRouteMeta(pathname), [pathname]);
+
+  useEffect(() => {
+    const canonicalUrl = `${SITE_URL}${pathname === '/' ? '/' : pathname}`;
+    const robots = meta.robots || 'index,follow';
+
+    document.title = meta.title;
+    ensureMeta('meta[name="description"]', { name: 'description', content: meta.description });
+    ensureMeta('meta[name="robots"]', { name: 'robots', content: robots });
+    ensureMeta('meta[property="og:type"]', { property: 'og:type', content: 'website' });
+    ensureMeta('meta[property="og:site_name"]', { property: 'og:site_name', content: 'Securepath Consulting' });
+    ensureMeta('meta[property="og:title"]', { property: 'og:title', content: meta.title });
+    ensureMeta('meta[property="og:description"]', { property: 'og:description', content: meta.description });
+    ensureMeta('meta[property="og:url"]', { property: 'og:url', content: canonicalUrl });
+    ensureMeta('meta[name="twitter:card"]', { name: 'twitter:card', content: 'summary' });
+    ensureMeta('meta[name="twitter:title"]', { name: 'twitter:title', content: meta.title });
+    ensureMeta('meta[name="twitter:description"]', { name: 'twitter:description', content: meta.description });
+    ensureLink('canonical', canonicalUrl);
+
+    let script = document.head.querySelector('#securepath-jsonld');
+    if (!script) {
+      script = document.createElement('script');
+      script.id = 'securepath-jsonld';
+      script.type = 'application/ld+json';
+      document.head.appendChild(script);
+    }
+
+    const graph = [
+      {
+        '@type': 'Organization',
+        '@id': `${SITE_URL}/#organization`,
+        name: 'Securepath Consulting',
+        url: SITE_URL,
+        email: 'william.d@securepathconsulting.co.za',
+        slogan: 'Elevate Protect Succeed',
+        areaServed: ['South Africa', 'United Kingdom', 'Mauritius', 'European Union'],
+        serviceType: ['Cybersecurity consulting', 'Data protection consulting', 'Privacy compliance'],
+      },
+      {
+        '@type': 'WebSite',
+        '@id': `${SITE_URL}/#website`,
+        name: 'Securepath Consulting',
+        url: SITE_URL,
+        publisher: { '@id': `${SITE_URL}/#organization` },
+      },
+    ];
+
+    if (pathname.startsWith('/services/')) {
+      graph.push({
+        '@type': 'Service',
+        name: meta.title.replace(' | Securepath Consulting', ''),
+        description: meta.description,
+        provider: { '@id': `${SITE_URL}/#organization` },
+        areaServed: ['South Africa', 'United Kingdom', 'Mauritius', 'European Union'],
+        url: canonicalUrl,
+      });
+    }
+
+    script.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@graph': graph,
+    });
+  }, [meta, pathname]);
+
+  return null;
+};
 
 // ===== NAVBAR ===== //
 const Navbar = () => {
-  const navRef = useRef(null);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
-    let ctx = gsap.context(() => {
-      ScrollTrigger.create({
-        start: 'top -50',
-        onUpdate: (self) => {
-          if (self.direction === 1) {
-            gsap.to(navRef.current, { backgroundColor: 'rgba(18, 22, 32, 0.8)', backdropFilter: 'blur(16px)', color: '#F8FAFC', borderColor: 'rgba(248, 250, 252, 0.1)', top: '1rem', duration: 0.4 });
-          } else if (self.progress === 0) {
-            gsap.to(navRef.current, { backgroundColor: 'transparent', backdropFilter: 'blur(0px)', color: '#F8FAFC', borderColor: 'transparent', top: '2rem', duration: 0.4 });
-          }
-        }
-      });
-    });
-    return () => ctx.revert();
+    const onScroll = () => {
+      const next = window.scrollY > 50;
+      setIsScrolled((current) => (current === next ? current : next));
+    };
+
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   return (
-    <nav ref={navRef} className="fixed top-8 left-1/2 -translate-x-1/2 z-50 flex items-center justify-between px-6 py-3 rounded-full border border-transparent text-primary transition-colors w-[90%] max-w-5xl">
+    <nav
+      aria-label="Primary navigation"
+      className={`fixed left-1/2 -translate-x-1/2 z-50 flex items-center justify-between px-6 py-3 rounded-full border text-primary transition-[top,background-color,border-color,backdrop-filter] duration-300 w-[90%] max-w-5xl ${
+        isScrolled
+          ? 'top-4 border-primary/10 bg-background/80 backdrop-blur-2xl'
+          : 'top-8 border-transparent bg-transparent'
+      }`}
+    >
       <Link to="/" className="flex items-center gap-3">
         <LogoFull className="h-8" />
       </Link>
@@ -76,8 +267,8 @@ const Footer = () => {
           </div>
         </div>
         
-        <div>
-          <h4 className="font-bold mb-6 text-accent">Navigation</h4>
+        <nav aria-label="Footer navigation">
+          <h2 className="font-bold mb-6 text-accent text-base">Navigation</h2>
           <ul className="space-y-4 text-sm text-primary/70 font-mono">
             <li><Link to="/about" className="hover:text-accent transition-colors">About Us</Link></li>
             <li><Link to="/solutions" className="hover:text-accent transition-colors">Solutions</Link></li>
@@ -86,13 +277,13 @@ const Footer = () => {
             <li><a href="/assessments/gdpr-assessment.html" className="hover:text-accent transition-colors">GDPR Assessment</a></li>
             <li><a href="/assessments/popia-assessment.html" className="hover:text-accent transition-colors">POPIA Assessment</a></li>
           </ul>
-        </div>
+        </nav>
         
         <div>
-          <h4 className="font-bold mb-6 text-accent">Contact</h4>
+          <h2 className="font-bold mb-6 text-accent text-base">Contact</h2>
           <ul className="space-y-4 text-sm text-primary/70 font-mono">
             <li><a href="mailto:william.d@securepathconsulting.co.za" className="hover:text-white transition-colors">william.d@securepathconsulting.co.za</a></li>
-            <li><a href="https://www.securepathconsulting.co.za" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">www.securepathconsulting.co.za</a></li>
+            <li><a href="https://www.securepathconsulting.co.za" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">www.securepathconsulting.co.za</a></li>
           </ul>
         </div>
       </div>
@@ -111,6 +302,27 @@ const ScrollToTop = () => {
   return null;
 }
 
+const RouteFallback = () => (
+  <div className="min-h-screen bg-background text-primary flex items-center justify-center px-6">
+    <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary/40">Loading Securepath</p>
+  </div>
+);
+
+const AppRoutes = () => (
+  <Suspense fallback={<RouteFallback />}>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/solutions" element={<Solutions />} />
+      <Route path="/services/:slug" element={<ServiceOffering />} />
+      <Route path="/methodology" element={<Methodology />} />
+      <Route path="/insights" element={<Insights />} />
+      <Route path="/insights/:slug" element={<InsightPost />} />
+      <Route path="/contact" element={<Contact />} />
+    </Routes>
+  </Suspense>
+);
+
 // ===== LAYOUT WRAPPER ===== //
 const AppLayout = () => {
   const { pathname } = useLocation();
@@ -119,27 +331,21 @@ const AppLayout = () => {
   if (isDeck) {
     return (
       <main className="w-full h-screen bg-black overflow-hidden m-0 p-0">
-        <Routes>
-          <Route path="/deck" element={<Deck />} />
-        </Routes>
+        <Suspense fallback={<RouteFallback />}>
+          <Routes>
+            <Route path="/deck" element={<Deck />} />
+          </Routes>
+        </Suspense>
       </main>
     );
   }
 
   return (
     <div className="w-full bg-background min-h-screen flex flex-col">
+      <a href="#main-content" className="skip-link">Skip to content</a>
       <Navbar />
-      <main className="flex-grow">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/solutions" element={<Solutions />} />
-          <Route path="/services/:slug" element={<ServiceOffering />} />
-          <Route path="/methodology" element={<Methodology />} />
-          <Route path="/insights" element={<Insights />} />
-          <Route path="/insights/:slug" element={<InsightPost />} />
-          <Route path="/contact" element={<Contact />} />
-        </Routes>
+      <main id="main-content" className="flex-grow" tabIndex="-1">
+        <AppRoutes />
       </main>
       <Footer />
     </div>
@@ -150,6 +356,7 @@ const AppLayout = () => {
 function App() {
   return (
     <BrowserRouter>
+      <SeoManager />
       <ScrollToTop />
       <AppLayout />
     </BrowserRouter>

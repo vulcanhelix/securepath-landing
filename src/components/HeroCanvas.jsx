@@ -7,6 +7,7 @@ const HeroCanvas = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d', { alpha: false }); // alpha: false for performance if background is solid
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     
     let animationFrameId;
     let particles = [];
@@ -14,7 +15,7 @@ const HeroCanvas = () => {
     let height = window.innerHeight;
     
     // Config
-    const PARTICLE_COUNT = Math.min(Math.floor((width * height) / 10000), 150); // Scale with screen size
+    const PARTICLE_COUNT = Math.min(Math.floor((width * height) / 14000), 90); // Scale with screen size
     const CONNECTION_RADIUS = 150;
     const MOUSE_RADIUS = 250;
     const PARTICLE_SPEED = 0.5;
@@ -38,6 +39,11 @@ const HeroCanvas = () => {
     };
     
     initCanvas();
+    if (reducedMotion) {
+      ctx.fillStyle = '#121620';
+      ctx.fillRect(0, 0, width, height);
+      return undefined;
+    }
     
     const handleResize = () => {
       width = window.innerWidth;
@@ -159,6 +165,8 @@ const HeroCanvas = () => {
   return (
     <canvas 
       ref={canvasRef} 
+      aria-hidden="true"
+      role="presentation"
       className="absolute inset-0 z-0 pointer-events-auto"
       style={{ width: '100%', height: '100%', display: 'block' }}
     />

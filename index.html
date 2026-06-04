@@ -2,13 +2,53 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Securepath Consulting</title>
-    <!-- Midnight Luxe preset fonts -->
+    <meta name="description" content="Securepath Consulting helps organisations strengthen cybersecurity, POPIA, GDPR, privacy, and third-party risk programmes." />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#121620" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Securepath Consulting" />
+    <meta property="og:title" content="Securepath Consulting | Cybersecurity and Data Protection" />
+    <meta property="og:description" content="Cybersecurity, privacy, POPIA, GDPR, and third-party risk consulting for resilient organisations." />
+    <meta property="og:url" content="https://securepathconsulting.co.za/" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Securepath Consulting | Cybersecurity and Data Protection" />
+    <meta name="twitter:description" content="Cybersecurity, privacy, POPIA, GDPR, and third-party risk consulting for resilient organisations." />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href="https://securepathconsulting.co.za/" />
+    <title>Securepath Consulting | Cybersecurity and Data Protection</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600;1,700&display=swap" rel="stylesheet">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600;1,700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600;1,700&display=swap">
+    </noscript>
+    <script type="application/ld+json" id="securepath-jsonld">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://securepathconsulting.co.za/#organization",
+            "name": "Securepath Consulting",
+            "url": "https://securepathconsulting.co.za",
+            "email": "william.d@securepathconsulting.co.za",
+            "slogan": "Elevate Protect Succeed",
+            "areaServed": ["South Africa", "United Kingdom", "Mauritius", "European Union"],
+            "serviceType": ["Cybersecurity consulting", "Data protection consulting", "Privacy compliance"]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://securepathconsulting.co.za/#website",
+            "name": "Securepath Consulting",
+            "url": "https://securepathconsulting.co.za",
+            "publisher": {
+              "@id": "https://securepathconsulting.co.za/#organization"
+            }
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <!-- Global Noise Overlay -->
@@ -17,9 +57,22 @@
         <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
       </filter>
     </svg>
-    <div class="fixed inset-0 pointer-events-none z-[9999] opacity-[0.05]" style="filter: url(#noiseFilter); mix-blend-mode: multiply;"></div>
+    <div class="fixed inset-0 pointer-events-none z-[9999] opacity-[0.05]" style="filter: url(#noiseFilter); mix-blend-mode: multiply;" aria-hidden="true"></div>
     
     <div id="root"></div>
+    <noscript>
+      <main style="font-family: system-ui, sans-serif; background: #121620; color: #f8fafc; min-height: 100vh; padding: 3rem;">
+        <h1>Securepath Consulting</h1>
+        <p>Cybersecurity, privacy, POPIA, GDPR, Microsoft 365 security, and third-party risk consulting for resilient organisations.</p>
+        <nav aria-label="No-script site navigation">
+          <a style="color: #10b981;" href="/about">About</a>
+          <a style="color: #10b981; margin-left: 1rem;" href="/solutions">Solutions</a>
+          <a style="color: #10b981; margin-left: 1rem;" href="/methodology">Methodology</a>
+          <a style="color: #10b981; margin-left: 1rem;" href="/insights">Insights</a>
+          <a style="color: #10b981; margin-left: 1rem;" href="/contact">Contact</a>
+        </nav>
+      </main>
+    </noscript>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

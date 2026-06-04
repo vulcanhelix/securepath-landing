@@ -1,7 +1,7 @@
 import React from 'react';
 
 export const LogoIcon = ({ className = "w-10 h-10", color = "#10B981" }) => (
-  <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+  <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-hidden="true" focusable="false">
     <g transform="translate(50 50) rotate(45) translate(-50 -50)">
       {/* Top-left piece */}
       <path d="M30 30 L45 30 A 15 15 0 0 1 60 45 L60 45 A 5 5 0 0 1 55 50 L35 50 A 5 5 0 0 1 30 45 Z" fill={color} className="opacity-90"/>

@@ -4,30 +4,36 @@ import { Target, Layers, Network, Server, Plus, Minus, ArrowRight } from 'lucide
 
 const SolutionNode = ({ icon: Icon, title, description, details, linkTo }) => {
    const [expanded, setExpanded] = useState(false);
+   const contentId = `${title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-details`;
 
    return (
       <div 
          className={`relative border-b border-primary/10 overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] ${expanded ? 'bg-[#0B0E14]' : 'hover:bg-primary/[0.02]'}`}
       >
-         <div 
-            className="flex items-center justify-between p-8 md:p-12 cursor-pointer group"
-            onClick={() => setExpanded(!expanded)}
-         >
-            <div className="flex items-center gap-8 md:gap-16">
-               <div className={`p-4 rounded-full border transition-colors duration-500 ${expanded ? 'border-accent bg-accent/10 text-accent' : 'border-primary/20 text-primary/40 group-hover:border-accent/50 group-hover:text-accent'}`}>
-                  <Icon className="w-8 h-8" />
-               </div>
-               <h3 className={`text-3xl md:text-5xl font-sans font-bold tracking-tight transition-colors duration-500 ${expanded ? 'text-accent' : 'text-primary'}`}>
-                  {title}
-               </h3>
-            </div>
-            
-            <button className={`p-4 rounded-full border transition-all duration-500 ${expanded ? 'border-accent bg-accent text-background rotate-180' : 'border-primary/20 text-primary group-hover:border-accent group-hover:text-accent'}`}>
-               {expanded ? <Minus className="w-6 h-6" /> : <Plus className="w-6 h-6" />}
-            </button>
-         </div>
+         <h2>
+            <button
+               type="button"
+               aria-expanded={expanded}
+               aria-controls={contentId}
+               className="flex w-full items-center justify-between p-8 md:p-12 text-left cursor-pointer group"
+               onClick={() => setExpanded(!expanded)}
+            >
+               <span className="flex items-center gap-8 md:gap-16">
+                  <span className={`p-4 rounded-full border transition-colors duration-500 ${expanded ? 'border-accent bg-accent/10 text-accent' : 'border-primary/20 text-primary/40 group-hover:border-accent/50 group-hover:text-accent'}`}>
+                     <Icon className="w-8 h-8" aria-hidden="true" />
+                  </span>
+                  <span className={`text-3xl md:text-5xl font-sans font-bold tracking-tight transition-colors duration-500 ${expanded ? 'text-accent' : 'text-primary'}`}>
+                     {title}
+                  </span>
+               </span>
 
-         <div className={`overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] ${expanded ? 'max-h-[800px] opacity-100 pb-12' : 'max-h-0 opacity-0'}`}>
+               <span className={`p-4 rounded-full border transition-all duration-500 ${expanded ? 'border-accent bg-accent text-background rotate-180' : 'border-primary/20 text-primary group-hover:border-accent group-hover:text-accent'}`} aria-hidden="true">
+                  {expanded ? <Minus className="w-6 h-6" /> : <Plus className="w-6 h-6" />}
+               </span>
+            </button>
+         </h2>
+
+         <div id={contentId} className={`overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] ${expanded ? 'max-h-[800px] opacity-100 pb-12' : 'max-h-0 opacity-0'}`}>
             <div className="pl-8 md:pl-[148px] pr-8 md:pr-12 max-w-4xl">
                <p className="text-xl md:text-2xl text-primary/70 font-light leading-relaxed mb-8 font-sans">
                   {description}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Presentation from '../components/deck/Presentation';
 import CoverSlide from '../components/deck/slides/CoverSlide';
 import IntroSlide from '../components/deck/slides/IntroSlide';
@@ -23,6 +23,21 @@ const slides = [
 ];
 
 const Deck = () => {
+  useEffect(() => {
+    const id = 'deck-fonts';
+    if (document.getElementById(id)) return undefined;
+
+    const link = document.createElement('link');
+    link.id = id;
+    link.rel = 'stylesheet';
+    link.href = 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700&display=swap';
+    document.head.appendChild(link);
+
+    return () => {
+      document.getElementById(id)?.remove();
+    };
+  }, []);
+
   return (
     <div className="w-screen h-screen m-0 p-0 overflow-hidden bg-black fixed inset-0 z-[100]">
       <Presentation slides={slides} />

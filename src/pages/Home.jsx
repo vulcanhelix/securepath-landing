@@ -1,168 +1,64 @@
 import React, { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Crosshair, Fingerprint, Cpu } from 'lucide-react';
 import { servicesData } from '../data/services';
 import HeroCanvas from '../components/HeroCanvas';
 
-gsap.registerPlugin(ScrollTrigger);
-
 const Home = () => {
-  const container = useRef(null);
   const cursorDot = useRef(null);
   
   // Custom Cursor Logic
   useEffect(() => {
+    if (!window.matchMedia('(pointer: fine)').matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return undefined;
+    }
+
+    let rafId = null;
+    let cursorX = 0;
+    let cursorY = 0;
+
     const moveCursor = (e) => {
-      gsap.to(cursorDot.current, {
-        x: e.clientX,
-        y: e.clientY,
-        duration: 0.15,
-        ease: 'power3.out'
+      cursorX = e.clientX;
+      cursorY = e.clientY;
+
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        if (cursorDot.current) {
+          cursorDot.current.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%)`;
+        }
+        rafId = null;
       });
     };
-    
-    const addMagnetic = () => {
-      document.querySelectorAll('a, button, .hover-trigger').forEach(el => {
-        el.addEventListener('mouseenter', () => gsap.to(cursorDot.current, { scale: 3, backgroundColor: 'rgba(16,185,129,0.1)', border: '1px solid #10B981', duration: 0.3 }));
-        el.addEventListener('mouseleave', () => gsap.to(cursorDot.current, { scale: 1, backgroundColor: '#F8FAFC', border: 'none', duration: 0.3 }));
-      });
-    }
 
-    if (window.matchMedia("(pointer: fine)").matches) {
-        window.addEventListener('mousemove', moveCursor);
-        addMagnetic();
-    }
-    
-    return () => window.removeEventListener('mousemove', moveCursor);
-  }, []);
+    const handlePointerOver = (event) => {
+      if (event.target.closest('a, button, .hover-trigger')) {
+        cursorDot.current?.classList.add('cursor-active');
+      }
+    };
 
-  // Performance-Optimized Cinematic Animations (No heavy blurs)
-  useEffect(() => {
-    let ctx = gsap.context(() => {
-      
-      // 1. Snappy Hero Entrance
-      const tl = gsap.timeline();
-      tl.fromTo('.hero-word', 
-        { y: 150, rotateX: -90, opacity: 0 },
-        { y: 0, rotateX: 0, opacity: 1, duration: 1.2, stagger: 0.1, ease: 'expo.out', transformPerspective: 1000 }
-      )
-      .fromTo('.hero-fade', 
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 1.5, stagger: 0.2, ease: 'power3.out' },
-        "-=0.8"
-      );
+    const handlePointerOut = (event) => {
+      if (event.target.closest('a, button, .hover-trigger')) {
+        cursorDot.current?.classList.remove('cursor-active');
+      }
+    };
 
-      // 2. Parallax Hero Fade (Performant transform-based)
-      ScrollTrigger.create({
-        trigger: '.hero-section',
-        start: 'top top',
-        end: 'bottom top',
-        scrub: true,
-        animation: gsap.fromTo('.hero-content', 
-          { y: 0, opacity: 1 }, 
-          { y: 200, opacity: 0, ease: 'none' }
-        )
-      });
+    window.addEventListener('pointermove', moveCursor, { passive: true });
+    document.addEventListener('pointerover', handlePointerOver);
+    document.addEventListener('pointerout', handlePointerOut);
 
-      // 4. Staggered Grid Reveals (Clip-path based for performance)
-      const fadeSections = gsap.utils.toArray('.reveal-section');
-      fadeSections.forEach((sec) => {
-        gsap.fromTo(sec, 
-          { opacity: 0, y: 100 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 1.2,
-            ease: 'expo.out',
-            scrollTrigger: {
-              trigger: sec,
-              start: 'top 85%',
-              toggleActions: 'play none none reverse'
-            }
-          }
-        );
-      });
-
-      // 5. Arsenal Service Cards Stagger
-      gsap.fromTo('.service-card',
-        { opacity: 0, y: 50, scale: 0.95 },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.8,
-          stagger: 0.1,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: '.services-grid',
-            start: 'top 80%',
-            toggleActions: 'play none none reverse'
-          }
-        }
-      );
-
-      // 6. Metrics Counting Animation
-      const metrics = gsap.utils.toArray('.metric-number');
-      metrics.forEach((metric) => {
-         const target = parseInt(metric.getAttribute('data-target'), 10);
-         const isPlus = metric.getAttribute('data-plus') === "true";
-         const isPercent = metric.getAttribute('data-percent') === "true";
-         
-         if(!isNaN(target)) {
-            gsap.to(metric, {
-               innerHTML: target,
-               duration: 2.5,
-               ease: 'power4.out',
-               snap: { innerHTML: 1 },
-               scrollTrigger: {
-                  trigger: '.metrics-section',
-                  start: 'top 80%',
-                  toggleActions: 'play none none none' // Only play once
-               },
-               onUpdate: function() {
-                  // Format numbers dynamically if needed
-                  let val = Math.round(this.targets()[0].innerHTML);
-                  this.targets()[0].innerHTML = val + (isPlus ? '+' : '') + (isPercent ? '%' : '');
-               }
-            });
-         }
-      });
-      
-      // 7. Infinite Marquee
-      gsap.to('.marquee-track', {
-         xPercent: -50,
-         ease: 'none',
-         duration: 40,
-         repeat: -1
-      });
-
-      // 8. Huge CTA Scaling
-      gsap.fromTo('.cta-massive',
-        { scale: 0.8, opacity: 0 },
-        {
-          scale: 1,
-          opacity: 1,
-          duration: 1.5,
-          ease: 'expo.out',
-          scrollTrigger: {
-            trigger: '.cta-section',
-            start: 'top center',
-            toggleActions: 'play none none reverse'
-          }
-        }
-      );
-
-    }, container);
-    return () => ctx.revert();
+    return () => {
+      window.removeEventListener('pointermove', moveCursor);
+      document.removeEventListener('pointerover', handlePointerOver);
+      document.removeEventListener('pointerout', handlePointerOut);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
   }, []);
 
   return (
-    <div ref={container} className="w-full bg-background overflow-x-hidden text-primary selection:bg-accent selection:text-background">
+    <div className="w-full bg-background overflow-x-hidden text-primary selection:bg-accent selection:text-background">
       
       {/* Performant Custom Cursor */}
-      <div ref={cursorDot} className="hidden md:block fixed top-0 left-0 w-3 h-3 bg-primary rounded-full pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 mix-blend-difference will-change-transform"></div>
+      <div ref={cursorDot} aria-hidden="true" className="custom-cursor hidden md:block fixed top-0 left-0 w-3 h-3 bg-primary rounded-full pointer-events-none z-[9999] mix-blend-difference will-change-transform"></div>
 
       {/* ===== HERO SECTION ===== */}
       <section className="hero-section relative h-[100dvh] w-full flex flex-col justify-center px-6 md:px-16 overflow-hidden">
@@ -176,24 +72,26 @@ const Home = () => {
         </div>
         
         <div className="hero-content relative z-20 w-full max-w-7xl mx-auto mt-20 pointer-events-none">
-          <div className="hero-fade flex items-center gap-4 mb-8">
-            <span className="w-12 h-px bg-accent"></span>
+          <div className="hero-fade flex items-center gap-4 mb-8" style={{ '--hero-delay': '120ms' }}>
+            <span className="w-12 h-px bg-accent" aria-hidden="true"></span>
             <span className="text-accent font-mono text-xs uppercase tracking-[0.3em]">The Architecture of Trust</span>
           </div>
           
-          <h1 className="text-6xl sm:text-7xl md:text-[9rem] lg:text-[11rem] font-sans font-extrabold uppercase leading-[0.85] tracking-tighter mb-4 text-primary w-full overflow-hidden">
-             <div className="hero-word origin-bottom">Strategic</div>
-          </h1>
-          <h1 className="text-6xl sm:text-7xl md:text-[9rem] lg:text-[11rem] font-drama italic text-accent leading-[0.85] tracking-tight w-full overflow-hidden mb-12">
-             <div className="hero-word origin-bottom">Resilience.</div>
+          <h1 className="mb-12">
+             <span className="block text-6xl sm:text-7xl md:text-[9rem] lg:text-[11rem] font-sans font-extrabold uppercase leading-[0.85] tracking-tighter mb-4 text-primary w-full overflow-hidden">
+               <span className="hero-word origin-bottom block" style={{ '--hero-delay': '40ms' }}>Strategic</span>
+             </span>
+             <span className="block text-6xl sm:text-7xl md:text-[9rem] lg:text-[11rem] font-drama italic text-accent leading-[0.85] tracking-tight w-full overflow-hidden">
+               <span className="hero-word origin-bottom block" style={{ '--hero-delay': '140ms' }}>Resilience.</span>
+             </span>
           </h1>
           
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-12 hero-fade">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-12">
              <p className="text-xl md:text-3xl font-light text-primary/70 max-w-2xl leading-relaxed">
                For elite enterprises navigating a hostile digital topology, we engineer <span className="text-white font-medium">uncompromising defense mechanisms</span> that turn compliance into an offensive capability.
              </p>
              
-             <Link to="/contact" className="hover-trigger group relative inline-flex items-center justify-center px-8 py-5 bg-white text-background font-bold tracking-widest uppercase text-sm rounded-full overflow-hidden transition-transform duration-500 hover:scale-105 pointer-events-auto shadow-[0_0_30px_rgba(255,255,255,0.1)] hover:shadow-[0_0_50px_rgba(16,185,129,0.3)]">
+             <Link to="/contact" className="hero-fade hover-trigger group relative inline-flex items-center justify-center px-8 py-5 bg-white text-background font-bold tracking-widest uppercase text-sm rounded-full overflow-hidden transition-transform duration-500 hover:scale-105 pointer-events-auto shadow-[0_0_30px_rgba(255,255,255,0.1)] hover:shadow-[0_0_50px_rgba(16,185,129,0.3)]" style={{ '--hero-delay': '260ms' }}>
                 <span className="relative z-10 flex items-center gap-3">
                   Initiate Audit <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </span>
@@ -224,13 +122,13 @@ const Home = () => {
                <div className="grid grid-cols-2 gap-8 pt-8 border-t border-primary/10">
                   <div>
                      <div className="flex items-center text-4xl lg:text-5xl font-sans font-bold text-accent mb-2">
-                        <span className="metric-number" data-target="9" data-plus="true">0</span>
+                        <span>9+</span>
                      </div>
-                     <div className="text-xs font-mono uppercase tracking-widest text-primary/40">Global Frameworks Mastered</div>
+                     <div className="text-xs font-mono uppercase tracking-widest text-primary/60">Global Frameworks Mastered</div>
                   </div>
                   <div>
                      <div className="text-4xl lg:text-5xl font-sans font-bold text-white mb-2">360°</div>
-                     <div className="text-xs font-mono uppercase tracking-widest text-primary/40">Ecosystem Visibility</div>
+                     <div className="text-xs font-mono uppercase tracking-widest text-primary/60">Ecosystem Visibility</div>
                   </div>
                </div>
             </div>
@@ -238,28 +136,29 @@ const Home = () => {
       </section>
 
       {/* ===== METRICS OF RESILIENCE ===== */}
-      <section className="metrics-section py-32 bg-[#080a0f] border-t border-b border-white/5 relative overflow-hidden">
+      <section className="metrics-section py-32 bg-[#080a0f] border-t border-b border-white/5 relative overflow-hidden" aria-labelledby="resilience-metrics-heading">
+         <h2 id="resilience-metrics-heading" className="sr-only">Securepath resilience metrics</h2>
          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.03)_0%,_transparent_70%)] pointer-events-none"></div>
          <div className="max-w-7xl mx-auto px-6 md:px-16 grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-8 relative z-10">
             <div className="flex flex-col items-center md:items-start text-center md:text-left">
                <div className="text-6xl md:text-8xl font-sans font-black text-white mb-4 tracking-tighter">
-                  <span className="metric-number" data-target="50" data-plus="true">0</span>
+                  <span>50+</span>
                </div>
-               <h4 className="text-xl font-bold text-accent mb-2">Data Risk Assessments Delivered</h4>
+               <h3 className="text-xl font-bold text-accent mb-2">Data Risk Assessments Delivered</h3>
                <p className="text-primary/50 text-sm font-mono max-w-xs">Comprehensive gap analyses and remediation roadmaps delivered across GDPR, POPIA, and PDPL mandates.</p>
             </div>
             <div className="flex flex-col items-center md:items-start text-center md:text-left">
                <div className="text-6xl md:text-8xl font-sans font-black text-white mb-4 tracking-tighter">
-                  <span className="metric-number" data-target="24" data-plus="true">0</span>
+                  <span>24+</span>
                </div>
-               <h4 className="text-xl font-bold text-accent mb-2">Adversarial Simulations</h4>
+               <h3 className="text-xl font-bold text-accent mb-2">Adversarial Simulations</h3>
                <p className="text-primary/50 text-sm font-mono max-w-xs">Active penetration testing and defensive posturing deployments per quarter.</p>
             </div>
             <div className="flex flex-col items-center md:items-start text-center md:text-left">
                <div className="text-6xl md:text-8xl font-sans font-black text-white mb-4 tracking-tighter">
-                  <span className="metric-number" data-target="40" data-plus="true">0</span>
+                  <span>40+</span>
                </div>
-               <h4 className="text-xl font-bold text-accent mb-2">Years Cybersecurity Experience</h4>
+               <h3 className="text-xl font-bold text-accent mb-2">Years Cybersecurity Experience</h3>
                <p className="text-primary/50 text-sm font-mono max-w-xs">Four decades of combined cyber-intelligence woven into our proprietary execution protocols.</p>
             </div>
          </div>
@@ -267,8 +166,8 @@ const Home = () => {
 
       {/* ===== TYPOGRAPHIC MARQUEE ===== */}
       <section className="py-24 overflow-hidden border-y border-white/5 bg-[#0a0d14] flex items-center relative">
-         <div className="marquee-container w-[200vw] flex relative z-10">
-            <div className="marquee-track flex whitespace-nowrap text-white/5 font-sans font-light text-6xl md:text-7xl uppercase tracking-[0.2em]">
+            <div className="marquee-container w-[200vw] flex relative z-10" aria-hidden="true">
+            <div className="marquee-track flex whitespace-nowrap text-white/[0.35] font-sans font-light text-6xl md:text-7xl uppercase tracking-[0.2em]">
                <span className="mx-12">Elevate</span> <span className="mx-12">·</span> <span className="mx-12">Protect</span> <span className="mx-12">·</span> <span className="mx-12">Succeed</span> <span className="mx-12">·</span> <span className="mx-12">Secure The Core</span> <span className="mx-12">·</span>
                <span className="mx-12">Elevate</span> <span className="mx-12">·</span> <span className="mx-12">Protect</span> <span className="mx-12">·</span> <span className="mx-12">Succeed</span> <span className="mx-12">·</span> <span className="mx-12">Secure The Core</span> <span className="mx-12">·</span>
                <span className="mx-12">Elevate</span> <span className="mx-12">·</span> <span className="mx-12">Protect</span> <span className="mx-12">·</span> <span className="mx-12">Succeed</span> <span className="mx-12">·</span> <span className="mx-12">Secure The Core</span> <span className="mx-12">·</span>
@@ -309,7 +208,7 @@ const Home = () => {
                         <div className="relative z-10">
                            <Icon className="w-8 h-8 text-primary/30 group-hover:text-accent transition-colors duration-500 mb-8" />
                            <h3 className="text-2xl font-bold font-sans text-primary group-hover:text-white transition-colors mb-4">{service.title}</h3>
-                           <p className="text-primary/40 font-mono text-xs leading-relaxed line-clamp-3 group-hover:text-primary/60 transition-colors">
+                           <p className="text-primary/60 font-mono text-xs leading-relaxed line-clamp-3 group-hover:text-primary/70 transition-colors">
                               {service.heroDescription}
                            </p>
                         </div>
@@ -341,11 +240,11 @@ const Home = () => {
                   { icon: Cpu, title: "Harden", desc: "Deploying the defense paradigm." }
                ].map((step, idx) => (
                   <React.Fragment key={idx}>
-                     <div className="hover-trigger group flex flex-col items-center max-w-xs p-8 rounded-2xl border border-transparent hover:border-primary/10 transition-colors duration-500">
+                     <div className="hover-trigger reveal-section group flex flex-col items-center max-w-xs p-8 rounded-2xl border border-transparent hover:border-primary/10 transition-colors duration-500">
                         <div className="w-16 h-16 rounded-full border border-primary/20 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:border-accent transition-all duration-500">
                            <step.icon className="w-6 h-6 text-primary group-hover:text-accent" />
                         </div>
-                        <h4 className="text-xl font-bold font-sans text-white mb-2">{step.title}</h4>
+                        <h3 className="text-xl font-bold font-sans text-white mb-2">{step.title}</h3>
                         <p className="text-sm font-mono text-primary/50">{step.desc}</p>
                      </div>
                      {idx < 2 && (
@@ -385,7 +284,7 @@ const Home = () => {
                      <div key={idx} className="p-6 border border-white/5 bg-[#121620] hover:border-accent/30 transition-colors duration-500 flex flex-col justify-center">
                         <div className="text-xs font-mono text-accent mb-2 uppercase tracking-widest">{item.region}</div>
                         <div className="text-2xl font-bold font-sans text-white mb-2">{item.law}</div>
-                        <div className="text-sm text-primary/40 font-mono">{item.desc}</div>
+                        <div className="text-sm text-primary/60 font-mono">{item.desc}</div>
                      </div>
                   ))}
                </div>

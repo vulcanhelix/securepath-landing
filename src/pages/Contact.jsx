@@ -6,6 +6,10 @@ const Contact = () => {
    const glowRef = useRef(null);
 
    useEffect(() => {
+      if (!window.matchMedia('(pointer: fine)').matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+         return undefined;
+      }
+
       // Simple mouse tracking for the contact glow
       const moveGlow = (e) => {
          if(!glowRef.current) return;
@@ -41,11 +45,13 @@ const Contact = () => {
          </div>
 
          <div className="text-center mb-20">
-            <h1 className="text-7xl md:text-[8rem] font-sans font-extrabold text-primary mb-2 tracking-tighter leading-none mix-blend-difference">
-               Initiate
-            </h1>
-            <h1 className="text-7xl md:text-[8rem] font-drama italic text-accent font-normal tracking-tight leading-none drop-shadow-[0_0_30px_rgba(16,185,129,0.3)]">
-               protocol.
+            <h1>
+               <span className="block text-7xl md:text-[8rem] font-sans font-extrabold text-primary mb-2 tracking-tighter leading-none mix-blend-difference">
+                  Initiate
+               </span>
+               <span className="block text-7xl md:text-[8rem] font-drama italic text-accent font-normal tracking-tight leading-none drop-shadow-[0_0_30px_rgba(16,185,129,0.3)]">
+                  protocol.
+               </span>
             </h1>
          </div>
 
@@ -61,7 +67,7 @@ const Contact = () => {
            </a>
 
            {/* Vault Button 2 */}
-           <a href="https://www.securepathconsulting.co.za" target="_blank" rel="noreferrer" className="bg-transparent border border-primary/30 p-10 hover:bg-accent text-primary hover:text-background transition-colors duration-500 flex flex-col items-start justify-between min-h-[250px] group relative overflow-hidden">
+           <a href="https://www.securepathconsulting.co.za" target="_blank" rel="noopener noreferrer" className="bg-transparent border border-primary/30 p-10 hover:bg-accent text-primary hover:text-background transition-colors duration-500 flex flex-col items-start justify-between min-h-[250px] group relative overflow-hidden">
               <Globe className="w-10 h-10 mb-8 opacity-50 group-hover:opacity-100 transition-opacity" />
               <div>
                  <h3 className="font-bold text-2xl font-sans mb-3">Enterprise Portal</h3>
