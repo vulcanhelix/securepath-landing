@@ -190,6 +190,13 @@ const ServiceOffering = () => {
               </span>
               <div className="absolute inset-0 bg-accent translate-y-[100%] group-hover:translate-y-0 transition-transform duration-300 ease-in-out" />
             </Link>
+
+            <p className="mt-8 text-sm text-slate-400">
+              Explore related thinking on our{' '}
+              <Link to="/insights" className="text-accent hover:underline">privacy and cybersecurity insights</Link>
+              {' '}or review our{' '}
+              <Link to="/methodology" className="text-accent hover:underline">methodology</Link>.
+            </p>
           </div>
         </div>
         

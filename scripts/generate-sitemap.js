@@ -26,17 +26,8 @@ const staticRoutes = [
   { path: '/contact',    changefreq: 'yearly',  priority: '0.7' },
 ];
 
-// Service slugs from src/data/services.js
-const serviceSlugs = [
-  'cybersecurity-services',
-  'dsar-management',
-  'information-officer',
-  'microsoft-365-audit',
-  'privacy-audit',
-  'security-posture-assessment',
-  'third-party-risk',
-  'customized-privacy-program',
-];
+import { serviceMeta } from '../src/data/seoMeta.js';
+const serviceSlugs = Object.keys(serviceMeta);
 
 // Standalone HTML pages
 const standalonePages = [

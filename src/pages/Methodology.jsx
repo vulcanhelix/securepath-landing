@@ -99,9 +99,9 @@ const Methodology = () => {
   return (
     <section ref={containerRef} className="relative bg-background pt-40 pb-48">
       <div className="text-center mb-32 max-w-4xl mx-auto px-6">
-        <h2 className="text-6xl md:text-[6rem] font-sans font-extrabold text-primary mb-6 tracking-tighter leading-[0.9]">
+        <h1 className="text-6xl md:text-[6rem] font-sans font-extrabold text-primary mb-6 tracking-tighter leading-[0.9]">
            The Client-Centric <br/><span className="text-accent italic font-drama font-normal">Methodology.</span>
-        </h2>
+        </h1>
         <p className="text-primary/50 font-sans text-xl max-w-2xl mx-auto font-light leading-relaxed">
            We do not deploy generic templates. We execute a tailored protocol mapped directly to your organization's unique threat vectors and operational rhythm.
         </p>

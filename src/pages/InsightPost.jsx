@@ -5,6 +5,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { getInsightBySlug, getInsightsByCategory, formatDate } from '../utils/insights';
 import AudioPlayer from '../components/AudioPlayer';
 import { CURRENT_AUDIO_VERSION, getAudioStatus } from '../utils/audioConfig';
+import { SITE_URL, DEFAULT_OG_IMAGE } from '../data/seoMeta';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,6 +17,44 @@ const FALLBACK_IMAGES = {
   'Data Governance': 'https://images.pexels.com/photos/1181671/pexels-photo-1181671.jpeg?auto=compress&cs=tinysrgb&w=1200',
   Privacy: 'https://images.pexels.com/photos/5473956/pexels-photo-5473956.jpeg?auto=compress&cs=tinysrgb&w=1200',
   Regulatory: 'https://images.pexels.com/photos/5668473/pexels-photo-5668473.jpeg?auto=compress&cs=tinysrgb&w=1200',
+};
+
+const CATEGORY_SERVICES = {
+  POPIA: [
+    { slug: 'information-officer', label: 'Information Officer as a Service' },
+    { slug: 'privacy-audit', label: 'Privacy Audit' },
+    { slug: 'dsar-management', label: 'Managed DSAR Service' },
+  ],
+  GDPR: [
+    { slug: 'privacy-audit', label: 'Privacy Audit' },
+    { slug: 'dsar-management', label: 'Managed DSAR Service' },
+    { slug: 'customized-privacy-program', label: 'Customized Privacy Program' },
+  ],
+  Cybersecurity: [
+    { slug: 'cybersecurity-services', label: 'Cybersecurity Services' },
+    { slug: 'security-posture-assessment', label: 'Security Posture Assessment' },
+    { slug: 'microsoft-365-audit', label: 'Microsoft 365 Security Audit' },
+  ],
+  Privacy: [
+    { slug: 'privacy-audit', label: 'Privacy Audit' },
+    { slug: 'customized-privacy-program', label: 'Customized Privacy Program' },
+  ],
+  'Data Governance': [
+    { slug: 'customized-privacy-program', label: 'Customized Privacy Program' },
+    { slug: 'third-party-risk', label: 'Third-Party Risk Management' },
+  ],
+  Compliance: [
+    { slug: 'privacy-audit', label: 'Privacy Audit' },
+    { slug: 'information-officer', label: 'Information Officer as a Service' },
+  ],
+  Regulatory: [
+    { slug: 'information-officer', label: 'Information Officer as a Service' },
+    { slug: 'privacy-audit', label: 'Privacy Audit' },
+  ],
+  default: [
+    { slug: 'privacy-audit', label: 'Privacy Audit' },
+    { slug: 'cybersecurity-services', label: 'Cybersecurity Services' },
+  ],
 };
 
 const RelatedCard = ({ post }) => (
@@ -137,6 +176,64 @@ const InsightPost = () => {
     return () => { cancelled = true; };
   }, [slug]);
 
+  // Per-post SEO: overrides the generic route meta set by SeoManager once the post loads.
+  useEffect(() => {
+    const setMeta = (selector, attrs) => {
+      let el = document.head.querySelector(selector);
+      if (!el) {
+        el = document.createElement('meta');
+        document.head.appendChild(el);
+      }
+      Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+    };
+
+    if (notFound) {
+      document.title = 'Insight Not Found | Securepath Consulting';
+      setMeta('meta[name="robots"]', { name: 'robots', content: 'noindex,follow' });
+      return;
+    }
+    if (!post) return;
+
+    const url = `${SITE_URL}/insights/${slug}`;
+    const title = `${post.title} | Securepath Consulting`;
+    const description = post.excerpt || post.subtitle || post.title;
+    const image = post.cover_image_url || FALLBACK_IMAGES[post.category] || DEFAULT_OG_IMAGE;
+
+    document.title = title;
+    setMeta('meta[name="description"]', { name: 'description', content: description });
+    setMeta('meta[property="og:title"]', { property: 'og:title', content: title });
+    setMeta('meta[property="og:description"]', { property: 'og:description', content: description });
+    setMeta('meta[property="og:type"]', { property: 'og:type', content: 'article' });
+    setMeta('meta[property="og:url"]', { property: 'og:url', content: url });
+    setMeta('meta[property="og:image"]', { property: 'og:image', content: image });
+    setMeta('meta[name="twitter:title"]', { name: 'twitter:title', content: title });
+    setMeta('meta[name="twitter:description"]', { name: 'twitter:description', content: description });
+    setMeta('meta[name="twitter:image"]', { name: 'twitter:image', content: image });
+    document.head.querySelector('link[rel="canonical"]')?.setAttribute('href', url);
+
+    let script = document.head.querySelector('#securepath-article-jsonld');
+    if (!script) {
+      script = document.createElement('script');
+      script.id = 'securepath-article-jsonld';
+      script.type = 'application/ld+json';
+      document.head.appendChild(script);
+    }
+    script.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: post.title,
+      description,
+      image,
+      url,
+      datePublished: post.published_at,
+      author: { '@type': 'Person', name: post.author },
+      publisher: { '@id': `${SITE_URL}/#organization` },
+      mainEntityOfPage: url,
+    });
+
+    return () => script.remove();
+  }, [post, notFound, slug]);
+
   useEffect(() => {
     if (!post || !containerRef.current) return;
     let ctx = gsap.context(() => {
@@ -207,7 +304,8 @@ const InsightPost = () => {
         <div className="absolute inset-0">
           <img
             src={imageUrl}
-            alt={post.title}
+            alt=""
+            aria-hidden="true"
             className="w-full h-full object-cover opacity-15"
             onError={(e) => { e.target.style.display = 'none'; }}
           />
@@ -290,6 +388,17 @@ const InsightPost = () => {
           <Link to="/contact" className="magnetic-btn inline-flex items-center gap-2 bg-accent text-background px-6 py-3 rounded-full text-sm font-semibold">
             Get in touch
           </Link>
+          {(CATEGORY_SERVICES[post.category] || CATEGORY_SERVICES.default).length > 0 && (
+            <p className="text-primary/50 text-sm mt-6">
+              Related services:{' '}
+              {(CATEGORY_SERVICES[post.category] || CATEGORY_SERVICES.default).map((svc, i, arr) => (
+                <span key={svc.slug}>
+                  <Link to={`/services/${svc.slug}`} className="text-accent hover:underline">{svc.label}</Link>
+                  {i < arr.length - 1 ? ' · ' : ''}
+                </span>
+              ))}
+            </p>
+          )}
         </div>
       </div>
 
