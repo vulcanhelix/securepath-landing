@@ -96,7 +96,7 @@ const IoChecker = () => {
         )}
 
         <div>
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent/60 mb-6">Registration &amp; compliance steps</p>
+          <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent mb-6">Registration &amp; compliance steps</p>
           <div className="space-y-6">
             {STEPS.map((s, i) => (
               <div key={i} className="flex gap-4">

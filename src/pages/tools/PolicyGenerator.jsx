@@ -85,7 +85,7 @@ Generated with the free Securepath Consulting POPIA Privacy Policy Generator (se
 
 const Field = ({ label, children }) => (
   <label className="block">
-    <span className="block font-mono text-xs uppercase tracking-[0.2em] text-accent/60 mb-2">{label}</span>
+    <span className="block font-mono text-xs uppercase tracking-[0.2em] text-accent mb-2">{label}</span>
     {children}
   </label>
 );
@@ -153,7 +153,7 @@ const PolicyGenerator = () => {
           </div>
 
           <div>
-            <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent/60 mb-3">What personal information do you collect? *</p>
+            <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent mb-3">What personal information do you collect? *</p>
             <div className="grid md:grid-cols-2 gap-2">
               {DATA_TYPES.map((d) => (
                 <label key={d} className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer text-sm transition-colors ${form.dataTypes.includes(d) ? 'border-accent/50 bg-accent/5' : 'border-white/10 hover:border-white/20'}`}>
@@ -165,7 +165,7 @@ const PolicyGenerator = () => {
           </div>
 
           <div>
-            <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent/60 mb-3">Why do you process it? *</p>
+            <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent mb-3">Why do you process it? *</p>
             <div className="grid md:grid-cols-2 gap-2">
               {PURPOSES.map((p) => (
                 <label key={p} className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer text-sm transition-colors ${form.purposes.includes(p) ? 'border-accent/50 bg-accent/5' : 'border-white/10 hover:border-white/20'}`}>

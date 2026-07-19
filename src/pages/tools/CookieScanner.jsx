@@ -71,7 +71,7 @@ const CookieScanner = () => {
         {result && (
           <div className="space-y-6">
             <div className="p-8 bg-[#0B0E14] border border-accent/20 rounded-lg">
-              <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent/60 mb-2">Scan result — {result.finalUrl}</p>
+              <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent mb-2">Scan result — {result.finalUrl}</p>
               <p className="text-4xl font-black mb-2">
                 <span className="text-accent">{trackers.length}</span> tracker{trackers.length !== 1 && 's'} detected
               </p>

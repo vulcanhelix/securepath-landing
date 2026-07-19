@@ -45,7 +45,7 @@ const VendorScorecard = () => {
     >
       <div className="space-y-8">
         <label className="block max-w-md">
-          <span className="block font-mono text-xs uppercase tracking-[0.2em] text-accent/60 mb-2">Vendor name</span>
+          <span className="block font-mono text-xs uppercase tracking-[0.2em] text-accent mb-2">Vendor name</span>
           <input
             value={vendor}
             onChange={(e) => setVendor(e.target.value)}
@@ -83,7 +83,7 @@ const VendorScorecard = () => {
 
         {show && complete && (
           <div className="p-8 bg-[#0B0E14] border border-accent/20 rounded-lg print:border-black">
-            <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent/60 mb-2">
+            <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent mb-2">
               Risk rating{vendor ? ` — ${vendor}` : ''}
             </p>
             <p className={`text-5xl font-black mb-1 ${band.color}`}>{pct}/100</p>

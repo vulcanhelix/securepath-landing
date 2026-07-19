@@ -23,7 +23,7 @@ const ToolShell = ({ slug, children, intro }) => {
         {children}
 
         <div className="mt-16 p-8 bg-[#0B0E14] border border-accent/10 rounded-lg">
-          <p className="text-xs font-mono uppercase tracking-[0.2em] text-accent/60 mb-3">Need expert help?</p>
+          <p className="text-xs font-mono uppercase tracking-[0.2em] text-accent mb-3">Need expert help?</p>
           <p className="text-primary/75 text-[15px] leading-relaxed mb-5">
             This tool gives general guidance, not legal advice. For a tailored assessment of your
             organisation's obligations, talk to Securepath Consulting.
