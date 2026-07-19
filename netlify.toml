@@ -3,15 +3,16 @@
   to = "/index.html"
   status = 200
 
-# Hashed assets are immutable — cache forever.
-[[headers]]
-  for = "/assets/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
-
 # HTML must always revalidate so browsers never hold shells that
 # reference chunk files from an older deploy.
 [[headers]]
   for = "/*"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
+
+# Hashed assets are immutable — cache forever.
+# Placed after the catch-all: with multiple matches, the later rule wins.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
