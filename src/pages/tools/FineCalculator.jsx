@@ -141,8 +141,8 @@ const FineCalculator = () => {
     >
       <div className="space-y-10">
         <div>
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent/60 mb-1">1. What went wrong (or could go wrong)?</p>
-          <p className="text-sm text-primary/75 mb-4">Pick the closest match — if several apply, pick the most serious one.</p>
+          <div className="flex items-center gap-3 mb-2"><span className="flex-shrink-0 w-9 h-9 rounded-full bg-accent text-background flex items-center justify-center font-bold">1</span><h2 className="text-xl md:text-2xl font-bold">What went wrong (or could go wrong)?</h2></div>
+          <p className="text-sm text-primary/60 mb-4 ml-12">Pick the closest match — if several apply, pick the most serious one.</p>
           <div className="space-y-2">
             {BREACH_TYPES.map((b) => (
               <OptionCard key={b.id} name="breach" selected={breach === b.id} onSelect={() => setBreach(b.id)} label={b.label} hint={b.hint} />
@@ -151,8 +151,8 @@ const FineCalculator = () => {
         </div>
 
         <div>
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent/60 mb-1">2. How many people's information is involved?</p>
-          <p className="text-sm text-primary/75 mb-4">Count people, not files — one customer in five systems is one data subject.</p>
+          <div className="flex items-center gap-3 mb-2"><span className="flex-shrink-0 w-9 h-9 rounded-full bg-accent text-background flex items-center justify-center font-bold">2</span><h2 className="text-xl md:text-2xl font-bold">How many people's information is involved?</h2></div>
+          <p className="text-sm text-primary/60 mb-4 ml-12">Count people, not files — one customer in five systems is one data subject.</p>
           <div className="grid md:grid-cols-2 gap-2">
             {RECORD_BANDS.map((r) => (
               <OptionCard key={r.id} name="records" selected={records === r.id} onSelect={() => setRecords(r.id)} label={r.label} hint={r.hint} />
@@ -161,8 +161,8 @@ const FineCalculator = () => {
         </div>
 
         <div>
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent/60 mb-1">3. Anything that makes it look worse?</p>
-          <p className="text-sm text-primary/75 mb-4">These are the factors the Regulator weighs when deciding how hard to hit. Tick all that apply.</p>
+          <div className="flex items-center gap-3 mb-2"><span className="flex-shrink-0 w-9 h-9 rounded-full bg-accent text-background flex items-center justify-center font-bold">3</span><h2 className="text-xl md:text-2xl font-bold">Anything that makes it look worse?</h2></div>
+          <p className="text-sm text-primary/60 mb-4 ml-12">These are the factors the Regulator weighs when deciding how hard to hit. Tick all that apply.</p>
           <div className="space-y-2">
             {AGGRAVATING.map((a) => (
               <OptionCard key={a.id} type="checkbox" selected={aggs.includes(a.id)} onSelect={() => toggleAgg(a.id)} label={a.label} hint={a.hint} />
@@ -181,7 +181,7 @@ const FineCalculator = () => {
         {show && breach && records && (
           <div className="space-y-6">
             <div className="p-8 bg-[#0B0E14] border border-accent/20 rounded-lg">
-              <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent/60 mb-2">Estimated administrative fine exposure</p>
+              <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent mb-2">Estimated administrative fine exposure</p>
               <p className="text-4xl md:text-5xl font-black text-accent mb-4">
                 {fmt(low)} – {fmt(high)}
               </p>
@@ -221,11 +221,11 @@ const FineCalculator = () => {
               buttonLabel="Show my reduction plan"
             >
               <div className="p-8 bg-[#0B0E14] border border-accent/20 rounded-lg">
-                <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent/60 mb-4">Your 10-step exposure reduction plan</p>
+                <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent mb-4">Your 10-step exposure reduction plan</p>
                 <ol className="space-y-3">
                   {CHECKLIST.map((item, i) => (
                     <li key={i} className="flex items-start gap-3 text-[15px] text-primary/80">
-                      <span className="flex-shrink-0 w-6 h-6 rounded-full border border-accent/30 text-accent flex items-center justify-center font-mono text-xs">{i + 1}</span>
+                      <span className="flex-shrink-0 w-8 h-8 rounded-full bg-accent/15 border border-accent/50 text-accent flex items-center justify-center font-bold text-sm">{i + 1}</span>
                       {item}
                     </li>
                   ))}
