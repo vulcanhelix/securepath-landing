@@ -33,7 +33,20 @@ const Tools = () => (
         ))}
       </div>
 
-      <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <a href="/assessments/popia-assessment.html" className="group p-8 bg-[#0B0E14] border border-white/5 hover:border-accent/30 rounded-lg transition-colors">
+          <h2 className="text-xl font-bold mb-1 group-hover:text-accent transition-colors">POPIA Self-Assessment</h2>
+          <p className="text-accent/70 font-drama italic mb-3">Is your business actually compliant?</p>
+          <p className="text-primary/50 text-sm leading-relaxed">19 questions across 3 domains — get a personalised compliance report in about 7 minutes.</p>
+        </a>
+        <a href="/assessments/gdpr-assessment.html" className="group p-8 bg-[#0B0E14] border border-white/5 hover:border-accent/30 rounded-lg transition-colors">
+          <h2 className="text-xl font-bold mb-1 group-hover:text-accent transition-colors">UK GDPR &amp; DUAA Self-Assessment</h2>
+          <p className="text-accent/70 font-drama italic mb-3">For UK-facing operations</p>
+          <p className="text-primary/50 text-sm leading-relaxed">Assess your UK GDPR and Data (Use and Access) Act 2025 readiness with a personalised action plan.</p>
+        </a>
+      </div>
+
+      <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
         <Link to="/compare/popia-vs-gdpr" className="group p-8 bg-[#0B0E14] border border-white/5 hover:border-accent/30 rounded-lg transition-colors">
           <h2 className="text-xl font-bold mb-2 group-hover:text-accent transition-colors">POPIA vs GDPR Comparison</h2>
           <p className="text-primary/50 text-sm leading-relaxed">

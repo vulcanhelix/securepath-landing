@@ -146,8 +146,6 @@ const Navbar = () => {
         <Link to="/methodology" className="nav-link text-primary/80 hover:text-accent">Methodology</Link>
         <Link to="/insights" className="nav-link text-primary/80 hover:text-accent">Insights</Link>
         <Link to="/tools" className="nav-link text-primary/80 hover:text-accent">Tools</Link>
-        <a href="/assessments/gdpr-assessment.html" className="nav-link text-primary/80 hover:text-accent">GDPR Assessment</a>
-        <a href="/assessments/popia-assessment.html" className="nav-link text-primary/80 hover:text-accent">POPIA Assessment</a>
       </div>
       <Link to="/contact" className="magnetic-btn bg-accent text-background px-5 py-2 rounded-full text-sm font-semibold flex items-center gap-2">
         <span>Contact</span>
