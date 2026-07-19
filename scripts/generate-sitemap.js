@@ -26,7 +26,7 @@ const staticRoutes = [
   { path: '/contact',    changefreq: 'yearly',  priority: '0.7' },
 ];
 
-import { serviceMeta } from '../src/data/seoMeta.js';
+import { serviceMeta, toolMeta, compareMeta, glossaryMeta, hubMeta } from '../src/data/seoMeta.js';
 const serviceSlugs = Object.keys(serviceMeta);
 
 // Standalone HTML pages
@@ -78,6 +78,20 @@ async function generate() {
       changefreq: 'monthly',
       priority: '0.8',
     }));
+  }
+
+  // Hubs, tools, comparisons, glossary
+  for (const path of Object.keys(hubMeta)) {
+    entries.push(toUrlEntry({ loc: `${SITE_URL}${path}`, changefreq: 'monthly', priority: '0.8' }));
+  }
+  for (const slug of Object.keys(toolMeta)) {
+    entries.push(toUrlEntry({ loc: `${SITE_URL}/tools/${slug}`, changefreq: 'monthly', priority: '0.8' }));
+  }
+  for (const slug of Object.keys(compareMeta)) {
+    entries.push(toUrlEntry({ loc: `${SITE_URL}/compare/popia-vs-gdpr/${slug}`, changefreq: 'monthly', priority: '0.7' }));
+  }
+  for (const slug of Object.keys(glossaryMeta)) {
+    entries.push(toUrlEntry({ loc: `${SITE_URL}/glossary/${slug}`, changefreq: 'yearly', priority: '0.5' }));
   }
 
   // Assessment pages

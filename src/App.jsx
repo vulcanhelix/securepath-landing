@@ -12,6 +12,16 @@ const ServiceOffering = lazy(() => import('./pages/ServiceOffering'));
 const Deck = lazy(() => import('./pages/Deck'));
 const Insights = lazy(() => import('./pages/Insights'));
 const InsightPost = lazy(() => import('./pages/InsightPost'));
+const Tools = lazy(() => import('./pages/Tools'));
+const FineCalculator = lazy(() => import('./pages/tools/FineCalculator'));
+const PolicyGenerator = lazy(() => import('./pages/tools/PolicyGenerator'));
+const DsarCalculator = lazy(() => import('./pages/tools/DsarCalculator'));
+const BreachChecker = lazy(() => import('./pages/tools/BreachChecker'));
+const VendorScorecard = lazy(() => import('./pages/tools/VendorScorecard'));
+const IoChecker = lazy(() => import('./pages/tools/IoChecker'));
+const CookieScanner = lazy(() => import('./pages/tools/CookieScanner'));
+const Compare = lazy(() => import('./pages/Compare'));
+const Glossary = lazy(() => import('./pages/Glossary'));
 
 const ensureMeta = (selector, attributes) => {
   let element = document.head.querySelector(selector);
@@ -135,6 +145,7 @@ const Navbar = () => {
         <Link to="/solutions" className="nav-link text-primary/80 hover:text-accent">Solutions</Link>
         <Link to="/methodology" className="nav-link text-primary/80 hover:text-accent">Methodology</Link>
         <Link to="/insights" className="nav-link text-primary/80 hover:text-accent">Insights</Link>
+        <Link to="/tools" className="nav-link text-primary/80 hover:text-accent">Tools</Link>
         <a href="/assessments/gdpr-assessment.html" className="nav-link text-primary/80 hover:text-accent">GDPR Assessment</a>
         <a href="/assessments/popia-assessment.html" className="nav-link text-primary/80 hover:text-accent">POPIA Assessment</a>
       </div>
@@ -171,6 +182,7 @@ const Footer = () => {
             <li><Link to="/solutions" className="hover:text-accent transition-colors">Solutions</Link></li>
             <li><Link to="/methodology" className="hover:text-accent transition-colors">Methodology</Link></li>
             <li><Link to="/insights" className="hover:text-accent transition-colors">Insights</Link></li>
+            <li><Link to="/tools" className="hover:text-accent transition-colors">Free Tools</Link></li>
             <li><a href="/assessments/gdpr-assessment.html" className="hover:text-accent transition-colors">GDPR Assessment</a></li>
             <li><a href="/assessments/popia-assessment.html" className="hover:text-accent transition-colors">POPIA Assessment</a></li>
           </ul>
@@ -216,6 +228,18 @@ const AppRoutes = () => (
       <Route path="/insights" element={<Insights />} />
       <Route path="/insights/:slug" element={<InsightPost />} />
       <Route path="/contact" element={<Contact />} />
+      <Route path="/tools" element={<Tools />} />
+      <Route path="/tools/popia-fine-calculator" element={<FineCalculator />} />
+      <Route path="/tools/privacy-policy-generator" element={<PolicyGenerator />} />
+      <Route path="/tools/dsar-deadline-calculator" element={<DsarCalculator />} />
+      <Route path="/tools/breach-notification-checker" element={<BreachChecker />} />
+      <Route path="/tools/vendor-risk-scorecard" element={<VendorScorecard />} />
+      <Route path="/tools/information-officer-checker" element={<IoChecker />} />
+      <Route path="/tools/cookie-scanner" element={<CookieScanner />} />
+      <Route path="/compare/popia-vs-gdpr" element={<Compare />} />
+      <Route path="/compare/popia-vs-gdpr/:topic" element={<Compare />} />
+      <Route path="/glossary" element={<Glossary />} />
+      <Route path="/glossary/:term" element={<Glossary />} />
     </Routes>
   </Suspense>
 );

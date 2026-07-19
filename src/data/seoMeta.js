@@ -86,7 +86,73 @@ export const serviceMeta = {
   },
 };
 
+import { toolsData } from './toolsData.js';
+import { compareTopics } from './popiaGdprCompare.js';
+import { glossaryTerms } from './glossary.js';
+
+export const toolMeta = Object.fromEntries(
+  toolsData.map((t) => [
+    t.slug,
+    { title: `${t.seoTitle} | Securepath Consulting`, description: t.description },
+  ])
+);
+
+export const compareMeta = Object.fromEntries(
+  compareTopics.map((t) => [
+    t.slug,
+    {
+      title: `${t.name}: POPIA vs GDPR | Securepath Consulting`,
+      description: t.seoDescription,
+    },
+  ])
+);
+
+export const glossaryMeta = Object.fromEntries(
+  glossaryTerms.map((t) => [
+    t.slug,
+    {
+      title: `What is ${t.term}? | Privacy Glossary | Securepath Consulting`,
+      description: t.definition.slice(0, 155),
+    },
+  ])
+);
+
+export const hubMeta = {
+  '/tools': {
+    title: 'Free Privacy and Compliance Tools | Securepath Consulting',
+    description:
+      'Free POPIA and GDPR tools: fine calculator, privacy policy generator, DSAR deadline calculator, breach notification checker, vendor risk scorecard, and more.',
+  },
+  '/compare/popia-vs-gdpr': {
+    title: 'POPIA vs GDPR: Full Comparison | Securepath Consulting',
+    description:
+      'Side-by-side comparison of POPIA and GDPR: consent, data subject rights, breach notification, transfers, penalties, and officers.',
+  },
+  '/glossary': {
+    title: 'Privacy and Data Protection Glossary | Securepath Consulting',
+    description:
+      'Plain-English definitions of POPIA, GDPR, and cybersecurity terms: DSAR, data subject, operator, processing, special personal information, and more.',
+  },
+};
+
 export const getRouteMeta = (pathname) => {
+  if (pathname.startsWith('/tools/')) {
+    const slug = pathname.split('/tools/')[1];
+    return toolMeta[slug] || hubMeta['/tools'];
+  }
+  if (pathname.startsWith('/compare/popia-vs-gdpr/')) {
+    const slug = pathname.split('/compare/popia-vs-gdpr/')[1];
+    return compareMeta[slug] || hubMeta['/compare/popia-vs-gdpr'];
+  }
+  if (pathname.startsWith('/glossary/')) {
+    const slug = pathname.split('/glossary/')[1];
+    return glossaryMeta[slug] || hubMeta['/glossary'];
+  }
+  if (hubMeta[pathname]) return hubMeta[pathname];
+  return getBaseRouteMeta(pathname);
+};
+
+const getBaseRouteMeta = (pathname) => {
   if (pathname.startsWith('/services/')) {
     const slug = pathname.split('/services/')[1];
     return serviceMeta[slug] || routeMeta['/solutions'];

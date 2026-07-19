@@ -6,7 +6,7 @@ import { createClient } from '@supabase/supabase-js';
 import { mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { SITE_URL, DEFAULT_OG_IMAGE, routeMeta, serviceMeta } from '../src/data/seoMeta.js';
+import { SITE_URL, DEFAULT_OG_IMAGE, routeMeta, serviceMeta, toolMeta, compareMeta, glossaryMeta, hubMeta } from '../src/data/seoMeta.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const dist = resolve(__dirname, '../dist');
@@ -50,6 +50,20 @@ async function main() {
   // Service pages
   for (const [slug, meta] of Object.entries(serviceMeta)) {
     renderShell({ path: `/services/${slug}`, ...meta });
+  }
+
+  // Hubs, tools, comparisons, glossary
+  for (const [path, meta] of Object.entries(hubMeta)) {
+    renderShell({ path, ...meta });
+  }
+  for (const [slug, meta] of Object.entries(toolMeta)) {
+    renderShell({ path: `/tools/${slug}`, ...meta });
+  }
+  for (const [slug, meta] of Object.entries(compareMeta)) {
+    renderShell({ path: `/compare/popia-vs-gdpr/${slug}`, ...meta });
+  }
+  for (const [slug, meta] of Object.entries(glossaryMeta)) {
+    renderShell({ path: `/glossary/${slug}`, ...meta });
   }
 
   // Insight posts from Supabase
@@ -96,7 +110,7 @@ async function main() {
     });
   }
 
-  console.log(`✅ Prerendered ${Object.keys(routeMeta).length} static + ${Object.keys(serviceMeta).length} service + ${posts.length} insight shells`);
+  console.log(`✅ Prerendered ${Object.keys(routeMeta).length} static + ${Object.keys(serviceMeta).length} service + ${Object.keys(toolMeta).length + Object.keys(hubMeta).length} tool + ${Object.keys(compareMeta).length} compare + ${Object.keys(glossaryMeta).length} glossary + ${posts.length} insight shells`);
 }
 
 main();
