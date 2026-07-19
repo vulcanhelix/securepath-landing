@@ -65,6 +65,15 @@ const Glossary = () => {
           </div>
         )}
 
+        <div className="border-t border-white/5 pt-8 mb-12">
+          <p className="text-xs font-mono uppercase tracking-[0.2em] text-primary/40 mb-4">Put it into practice</p>
+          <div className="flex flex-wrap gap-3">
+            <Link to="/tools" className="text-sm text-accent hover:underline">Free compliance tools</Link>
+            <Link to="/compare/popia-vs-gdpr" className="text-sm text-accent hover:underline">POPIA vs GDPR</Link>
+            <Link to="/insights" className="text-sm text-accent hover:underline">Insights</Link>
+          </div>
+        </div>
+
         <div className="p-8 bg-[#0B0E14] border border-accent/10 rounded-lg">
           <p className="text-primary/60 text-sm leading-relaxed mb-5">
             Wrestling with what this means for your organisation in practice? Securepath Consulting

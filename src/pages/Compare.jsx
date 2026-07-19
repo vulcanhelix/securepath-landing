@@ -79,7 +79,24 @@ const Compare = () => {
           <p className="text-primary/70 leading-relaxed">{topic.takeaway}</p>
         </div>
 
-        <div className="mt-12 border-t border-white/5 pt-8">
+        <div className="mt-12 border-t border-white/5 pt-6">
+          <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary/40 mb-3">Sources</p>
+          <ul className="space-y-1.5 text-sm text-primary/60 mb-8">
+            <li>
+              <a href="https://www.gov.za/documents/protection-personal-information-act" target="_blank" rel="noopener noreferrer" className="text-accent/70 hover:text-accent hover:underline">Protection of Personal Information Act 4 of 2013</a>{' '}
+              — full text (South Africa)
+            </li>
+            <li>
+              <a href="https://gdpr-info.eu/" target="_blank" rel="noopener noreferrer" className="text-accent/70 hover:text-accent hover:underline">GDPR (EU 2016/679)</a>{' '}
+              — full text with article index
+            </li>
+            <li>
+              <a href="https://inforegulator.org.za" target="_blank" rel="noopener noreferrer" className="text-accent/70 hover:text-accent hover:underline">Information Regulator (SA)</a>{' '}
+              and{' '}
+              <a href="https://edpb.europa.eu" target="_blank" rel="noopener noreferrer" className="text-accent/70 hover:text-accent hover:underline">EDPB</a>{' '}
+              — regulator guidance
+            </li>
+          </ul>
           <p className="text-xs font-mono uppercase tracking-[0.2em] text-primary/40 mb-4">Other topics</p>
           <div className="flex flex-wrap gap-3">
             {compareTopics.filter((t) => t.slug !== topic.slug).map((t) => (
