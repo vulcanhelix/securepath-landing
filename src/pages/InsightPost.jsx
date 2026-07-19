@@ -57,6 +57,43 @@ const CATEGORY_SERVICES = {
   ],
 };
 
+const CATEGORY_TOOLS = {
+  POPIA: [
+    { slug: 'popia-fine-calculator', label: 'POPIA Fine Calculator' },
+    { slug: 'privacy-policy-generator', label: 'Privacy Policy Generator' },
+    { slug: 'information-officer-checker', label: 'Information Officer Checker' },
+  ],
+  GDPR: [
+    { slug: 'dsar-deadline-calculator', label: 'DSAR Deadline Calculator' },
+    { slug: 'breach-notification-checker', label: 'Breach Notification Checker' },
+    { slug: 'cookie-scanner', label: 'Cookie Scanner' },
+  ],
+  Cybersecurity: [
+    { slug: 'breach-notification-checker', label: 'Breach Notification Checker' },
+    { slug: 'vendor-risk-scorecard', label: 'Vendor Risk Scorecard' },
+  ],
+  Privacy: [
+    { slug: 'privacy-policy-generator', label: 'Privacy Policy Generator' },
+    { slug: 'cookie-scanner', label: 'Cookie Scanner' },
+  ],
+  'Data Governance': [
+    { slug: 'vendor-risk-scorecard', label: 'Vendor Risk Scorecard' },
+    { slug: 'dsar-deadline-calculator', label: 'DSAR Deadline Calculator' },
+  ],
+  Compliance: [
+    { slug: 'popia-fine-calculator', label: 'POPIA Fine Calculator' },
+    { slug: 'information-officer-checker', label: 'Information Officer Checker' },
+  ],
+  Regulatory: [
+    { slug: 'popia-fine-calculator', label: 'POPIA Fine Calculator' },
+    { slug: 'breach-notification-checker', label: 'Breach Notification Checker' },
+  ],
+  default: [
+    { slug: 'popia-fine-calculator', label: 'POPIA Fine Calculator' },
+    { slug: 'privacy-policy-generator', label: 'Privacy Policy Generator' },
+  ],
+};
+
 const RelatedCard = ({ post }) => (
   <Link
     to={`/insights/${post.slug}`}
@@ -389,7 +426,7 @@ const InsightPost = () => {
             Get in touch
           </Link>
           {(CATEGORY_SERVICES[post.category] || CATEGORY_SERVICES.default).length > 0 && (
-            <p className="text-primary/50 text-sm mt-6">
+            <p className="text-primary/60 text-sm mt-6">
               Related services:{' '}
               {(CATEGORY_SERVICES[post.category] || CATEGORY_SERVICES.default).map((svc, i, arr) => (
                 <span key={svc.slug}>
@@ -399,6 +436,15 @@ const InsightPost = () => {
               ))}
             </p>
           )}
+          <p className="text-primary/60 text-sm mt-2">
+            Free tools:{' '}
+            {(CATEGORY_TOOLS[post.category] || CATEGORY_TOOLS.default).map((t, i, arr) => (
+              <span key={t.slug}>
+                <Link to={`/tools/${t.slug}`} className="text-accent hover:underline">{t.label}</Link>
+                {i < arr.length - 1 ? ' · ' : ''}
+              </span>
+            ))}
+          </p>
         </div>
       </div>
 
