@@ -12,13 +12,21 @@ export const Gated = ({ tool, context, heading, bullets = [], buttonLabel = 'Unl
 
   const submit = async () => {
     setState('saving');
-    const { error } = await supabase.from('tool_leads').insert({
+    const lead = {
       tool,
       email: form.email,
       name: form.name || null,
       company: form.company || null,
       context: context || null,
-    });
+    };
+    // Edge function saves the lead AND emails the team; direct insert is the fallback
+    // so the gate still unlocks if the function is down (no notification in that case).
+    const { data, error: fnError } = await supabase.functions.invoke('submit-lead', { body: lead });
+    if (!fnError && data?.ok) {
+      setState('done');
+      return;
+    }
+    const { error } = await supabase.from('tool_leads').insert(lead);
     setState(error ? 'error' : 'done');
   };
 
