@@ -111,7 +111,7 @@ const OptionCard = ({ selected, onSelect, label, hint, type = 'radio', name }) =
       <input type={type} name={name} checked={selected} onChange={onSelect} className="accent-emerald-500" />
       <span className="text-sm font-semibold">{label}</span>
     </span>
-    <span className="block text-xs text-primary/40 leading-relaxed mt-1.5 ml-7">{hint}</span>
+    <span className="block text-sm text-primary/65 leading-relaxed mt-1.5 ml-7">{hint}</span>
   </label>
 );
 
@@ -142,7 +142,7 @@ const FineCalculator = () => {
       <div className="space-y-10">
         <div>
           <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent/60 mb-1">1. What went wrong (or could go wrong)?</p>
-          <p className="text-xs text-primary/40 mb-4">Pick the closest match — if several apply, pick the most serious one.</p>
+          <p className="text-sm text-primary/75 mb-4">Pick the closest match — if several apply, pick the most serious one.</p>
           <div className="space-y-2">
             {BREACH_TYPES.map((b) => (
               <OptionCard key={b.id} name="breach" selected={breach === b.id} onSelect={() => setBreach(b.id)} label={b.label} hint={b.hint} />
@@ -152,7 +152,7 @@ const FineCalculator = () => {
 
         <div>
           <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent/60 mb-1">2. How many people's information is involved?</p>
-          <p className="text-xs text-primary/40 mb-4">Count people, not files — one customer in five systems is one data subject.</p>
+          <p className="text-sm text-primary/75 mb-4">Count people, not files — one customer in five systems is one data subject.</p>
           <div className="grid md:grid-cols-2 gap-2">
             {RECORD_BANDS.map((r) => (
               <OptionCard key={r.id} name="records" selected={records === r.id} onSelect={() => setRecords(r.id)} label={r.label} hint={r.hint} />
@@ -162,7 +162,7 @@ const FineCalculator = () => {
 
         <div>
           <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent/60 mb-1">3. Anything that makes it look worse?</p>
-          <p className="text-xs text-primary/40 mb-4">These are the factors the Regulator weighs when deciding how hard to hit. Tick all that apply.</p>
+          <p className="text-sm text-primary/75 mb-4">These are the factors the Regulator weighs when deciding how hard to hit. Tick all that apply.</p>
           <div className="space-y-2">
             {AGGRAVATING.map((a) => (
               <OptionCard key={a.id} type="checkbox" selected={aggs.includes(a.id)} onSelect={() => toggleAgg(a.id)} label={a.label} hint={a.hint} />
@@ -191,7 +191,7 @@ const FineCalculator = () => {
                   offence — fines and/or imprisonment of up to 10 years, separate from any administrative fine.
                 </p>
               )}
-              <p className="text-primary/60 text-sm leading-relaxed mb-4">
+              <p className="text-primary/75 text-[15px] leading-relaxed mb-4">
                 This is a directional band, not a prediction — the Regulator sets actual fines case by case
                 using the section 109 factors below. And the fine is only part of the bill: section 99 lets
                 affected people sue for damages (including for distress) without proving you were negligent.
@@ -200,7 +200,7 @@ const FineCalculator = () => {
                 <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary/40 mb-3">What the Regulator weighs (s109(3))</p>
                 <ul className="space-y-2">
                   {S109_FACTORS.map((f, i) => (
-                    <li key={i} className="flex items-start gap-3 text-sm text-primary/60">
+                    <li key={i} className="flex items-start gap-3 text-sm text-primary/75">
                       <span className="mt-1.5 flex-shrink-0 w-1.5 h-1.5 bg-accent rounded-full" />
                       {f}
                     </li>
@@ -224,13 +224,13 @@ const FineCalculator = () => {
                 <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent/60 mb-4">Your 10-step exposure reduction plan</p>
                 <ol className="space-y-3">
                   {CHECKLIST.map((item, i) => (
-                    <li key={i} className="flex items-start gap-3 text-sm text-primary/70">
+                    <li key={i} className="flex items-start gap-3 text-[15px] text-primary/80">
                       <span className="flex-shrink-0 w-6 h-6 rounded-full border border-accent/30 text-accent flex items-center justify-center font-mono text-xs">{i + 1}</span>
                       {item}
                     </li>
                   ))}
                 </ol>
-                <p className="text-primary/50 text-sm mt-6">
+                <p className="text-primary/70 text-sm mt-6">
                   Want this done for you? Our <a href="/services/privacy-audit" className="text-accent hover:underline">Privacy Audit</a> covers
                   every item above with a prioritised remediation roadmap.
                 </p>
@@ -243,7 +243,7 @@ const FineCalculator = () => {
                 {CASES.map((c) => (
                   <div key={c.who}>
                     <p className="font-bold text-sm mb-1">{c.who}</p>
-                    <p className="text-primary/50 text-sm leading-relaxed">{c.what}</p>
+                    <p className="text-primary/70 text-[15px] leading-relaxed">{c.what}</p>
                   </div>
                 ))}
               </div>
@@ -253,7 +253,7 @@ const FineCalculator = () => {
 
         <div className="border-t border-white/5 pt-6">
           <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary/40 mb-3">Sources</p>
-          <ul className="space-y-1.5 text-xs text-primary/40">
+          <ul className="space-y-1.5 text-sm text-primary/60">
             <li>
               <a href="https://www.gov.za/documents/protection-personal-information-act" target="_blank" rel="noopener noreferrer" className="text-accent/70 hover:text-accent hover:underline">
                 Protection of Personal Information Act 4 of 2013
@@ -267,7 +267,7 @@ const FineCalculator = () => {
               — enforcement notices, media statements, and the Department of Justice fine announcement
             </li>
           </ul>
-          <p className="text-primary/30 text-xs mt-3 leading-relaxed">
+          <p className="text-primary/55 text-sm mt-3 leading-relaxed">
             General guidance, not legal advice. Estimates are a transparent severity heuristic against the
             statutory R10m cap — actual penalties are at the Regulator's discretion.
           </p>

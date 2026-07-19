@@ -17,14 +17,14 @@ const ToolShell = ({ slug, children, intro }) => {
             {tool.name}
           </h1>
           <p className="mt-4 text-xl font-drama italic text-accent/80">{tool.tagline}</p>
-          {intro && <p className="mt-6 text-primary/60 leading-relaxed max-w-2xl">{intro}</p>}
+          {intro && <p className="mt-6 text-primary/75 text-lg leading-relaxed max-w-2xl">{intro}</p>}
         </div>
 
         {children}
 
         <div className="mt-16 p-8 bg-[#0B0E14] border border-accent/10 rounded-lg">
           <p className="text-xs font-mono uppercase tracking-[0.2em] text-accent/60 mb-3">Need expert help?</p>
-          <p className="text-primary/60 text-sm leading-relaxed mb-5">
+          <p className="text-primary/75 text-[15px] leading-relaxed mb-5">
             This tool gives general guidance, not legal advice. For a tailored assessment of your
             organisation's obligations, talk to Securepath Consulting.
           </p>

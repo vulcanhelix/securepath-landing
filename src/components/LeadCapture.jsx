@@ -32,7 +32,7 @@ export const Gated = ({ tool, context, heading, bullets = [], buttonLabel = 'Unl
       {bullets.length > 0 && (
         <ul className="space-y-2 mb-6">
           {bullets.map((b, i) => (
-            <li key={i} className="flex items-start gap-3 text-sm text-primary/70">
+            <li key={i} className="flex items-start gap-3 text-[15px] text-primary/80">
               <span className="mt-1.5 flex-shrink-0 w-1.5 h-1.5 bg-accent rounded-full" />
               {b}
             </li>
@@ -52,7 +52,7 @@ export const Gated = ({ tool, context, heading, bullets = [], buttonLabel = 'Unl
         {state === 'saving' ? 'One moment…' : buttonLabel}
       </button>
       {state === 'error' && <p className="text-red-400 text-xs mt-3">Something went wrong — please try again.</p>}
-      <p className="text-primary/30 text-xs mt-4">
+      <p className="text-primary/55 text-sm mt-4">
         We use your details to show your full report and may follow up once about your results.
         No spam, no list-selling — as you'd expect from a privacy firm.
       </p>
