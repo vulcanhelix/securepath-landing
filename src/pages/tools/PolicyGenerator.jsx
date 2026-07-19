@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import ToolShell from '../../components/ToolShell';
+import Gated from '../../components/LeadCapture';
 
 const DATA_TYPES = [
   'Names and contact details',
@@ -147,6 +148,7 @@ const PolicyGenerator = () => {
             </Field>
             <Field label="Information Officer name (optional)">
               <input className={inputCls} value={form.io} onChange={(e) => set('io', e.target.value)} placeholder="Jane Doe" />
+              <span className="block text-sm text-primary/65 leading-relaxed mt-2">Every SA organisation must have one — by default it's the CEO or owner. Leave blank and the policy names "the head of our organisation". Not registered yet? Use our free Information Officer checker.</span>
             </Field>
           </div>
 
@@ -176,14 +178,17 @@ const PolicyGenerator = () => {
 
           <div className="grid md:grid-cols-2 gap-2">
             {[
-              ['marketing', 'We send electronic marketing'],
-              ['cookies', 'Our website uses cookies / analytics'],
-              ['sharing', 'We use third-party service providers'],
-              ['transfers', 'Data may be stored outside South Africa'],
-            ].map(([k, label]) => (
-              <label key={k} className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer text-sm transition-colors ${form[k] ? 'border-accent/50 bg-accent/5' : 'border-white/10 hover:border-white/20'}`}>
-                <input type="checkbox" checked={form[k]} onChange={() => set(k, !form[k])} className="accent-emerald-500" />
-                {label}
+              ['marketing', 'We send electronic marketing', 'Emails, SMSes, or WhatsApps promoting your products. POPIA has strict opt-in rules for this, so your policy must cover it.'],
+              ['cookies', 'Our website uses cookies / analytics', 'Google Analytics, Meta Pixel, chat widgets — if your site has any of these, tick this. Unsure? Try our free cookie scanner.'],
+              ['sharing', 'We use third-party service providers', 'Almost everyone does: hosting, payroll, accounting software, email tools, CRMs. POPIA calls them "operators" and your policy must mention them.'],
+              ['transfers', 'Data may be stored outside South Africa', 'If you use Gmail, Microsoft 365, Xero, or most cloud software, your data leaves SA — tick this. POPIA section 72 governs it.'],
+            ].map(([k, label, hint]) => (
+              <label key={k} className={`block p-4 rounded-lg border cursor-pointer transition-colors ${form[k] ? 'border-accent/50 bg-accent/5' : 'border-white/10 hover:border-white/20'}`}>
+                <span className="flex items-center gap-3">
+                  <input type="checkbox" checked={form[k]} onChange={() => set(k, !form[k])} className="accent-emerald-500" />
+                  <span className="text-sm font-semibold">{label}</span>
+                </span>
+                <span className="block text-sm text-primary/65 leading-relaxed mt-1.5 ml-7">{hint}</span>
               </label>
             ))}
           </div>
@@ -212,6 +217,59 @@ const PolicyGenerator = () => {
           <pre className="whitespace-pre-wrap text-sm leading-relaxed bg-[#0B0E14] border border-white/10 rounded-lg p-8 text-primary/80 font-sans">
             {policy}
           </pre>
+
+          <div className="mt-8">
+            <Gated
+              tool="privacy-policy-generator"
+              context={{ company: form.company, type: form.type, email: form.email, website: form.website, dataTypes: form.dataTypes, purposes: form.purposes, marketing: form.marketing, cookies: form.cookies, sharing: form.sharing, transfers: form.transfers }}
+              heading="Free: your policy implementation pack"
+              bullets={[
+                'Where the policy must appear (website, forms, email footers) to actually count as notice',
+                'The 4 documents POPIA expects alongside a privacy policy — most businesses miss 3',
+                'A 12-month compliance calendar you can hand to whoever owns this',
+              ]}
+              buttonLabel="Show my implementation pack"
+            >
+              <div className="p-8 bg-[#0B0E14] border border-accent/20 rounded-lg">
+                <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent mb-4">Your implementation pack</p>
+                <div className="space-y-6 text-[15px] text-primary/80 leading-relaxed">
+                  <div>
+                    <p className="font-bold mb-2">1. Publish it where it counts</p>
+                    <p className="text-primary/70">Link the policy in your website footer, on every form that collects personal information (including newsletter signups), and in your email signature block. POPIA's openness condition requires people to be able to find it before they hand over data — a buried PDF doesn't qualify.</p>
+                  </div>
+                  <div>
+                    <p className="font-bold mb-2">2. The 4 companion documents</p>
+                    <p className="text-primary/70">A privacy policy alone is not compliance. You also need: a PAIA manual (legally mandatory, published on your site); an internal data breach response procedure; operator agreements with every service provider that touches your data; and consent records for any marketing lists.</p>
+                  </div>
+                  <div>
+                    <p className="font-bold mb-2">3. Your 12-month calendar</p>
+                    <p className="text-primary/70">Month 1: register your Information Officer. Month 2–3: map your data and sign operator agreements. Month 4: train staff. Month 6: run a mock data subject request. Month 9: vendor security review. Month 12: policy and risk-assessment refresh. Then repeat annually.</p>
+                  </div>
+                </div>
+                <p className="text-primary/70 text-sm mt-6">
+                  Want the whole thing handled? Our <a href="/services/customized-privacy-program" className="text-accent hover:underline">Customized Privacy Program</a> builds
+                  all of this for you, or start with a <a href="/services/privacy-audit" className="text-accent hover:underline">Privacy Audit</a>.
+                </p>
+              </div>
+            </Gated>
+          </div>
+
+          <div className="mt-12 border-t border-white/5 pt-6">
+            <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary/40 mb-3">Sources</p>
+            <ul className="space-y-1.5 text-sm text-primary/60">
+              <li>
+                <a href="https://www.gov.za/documents/protection-personal-information-act" target="_blank" rel="noopener noreferrer" className="text-accent/70 hover:text-accent hover:underline">Protection of Personal Information Act 4 of 2013</a>{' '}
+                — s11 (lawful grounds), s18 (notification when collecting), s19 (security), s69 (direct marketing), s72 (cross-border transfers), s23–24 (access and correction)
+              </li>
+              <li>
+                <a href="https://inforegulator.org.za" target="_blank" rel="noopener noreferrer" className="text-accent/70 hover:text-accent hover:underline">Information Regulator (South Africa)</a>{' '}
+                — complaint channels and Information Officer registration
+              </li>
+            </ul>
+            <p className="text-primary/55 text-sm mt-3 leading-relaxed">
+              This generator produces a general-purpose template aligned to POPIA's conditions. It is not legal advice — industry-specific rules (financial services, health, credit) may require additional clauses.
+            </p>
+          </div>
         </div>
       )}
     </ToolShell>
