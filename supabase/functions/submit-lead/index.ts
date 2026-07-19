@@ -73,7 +73,7 @@ Deno.serve(async (req) => {
           "Authorization": `Bearer ${RESEND_API_KEY}`,
         },
         body: JSON.stringify({
-          from: "SecurePath Tools <tools@securepathconsulting.co.za>",
+          from: "SecurePath Tools <tools@mail.securepathconsulting.co.za>",
           to: NOTIFY,
           subject: `New lead: ${name || email} — ${toolName}`,
           html,
