@@ -47,7 +47,7 @@ const SeoManager = () => {
   const meta = useMemo(() => getRouteMeta(pathname), [pathname]);
 
   useEffect(() => {
-    const canonicalUrl = `${SITE_URL}${pathname === '/' ? '/' : pathname}`;
+    const canonicalUrl = `${SITE_URL}${pathname === '/' ? '/' : `${pathname.replace(/\/$/, '')}/`}`;
     const robots = meta.robots || 'index,follow';
 
     document.title = meta.title;

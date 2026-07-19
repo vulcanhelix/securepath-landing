@@ -65,7 +65,7 @@ async function generate() {
   // Static pages
   for (const route of staticRoutes) {
     entries.push(toUrlEntry({
-      loc: `${SITE_URL}${route.path}`,
+      loc: `${SITE_URL}${route.path === '/' ? '/' : `${route.path}/`}`,
       changefreq: route.changefreq,
       priority: route.priority,
     }));
@@ -74,7 +74,7 @@ async function generate() {
   // Service pages
   for (const slug of serviceSlugs) {
     entries.push(toUrlEntry({
-      loc: `${SITE_URL}/services/${slug}`,
+      loc: `${SITE_URL}/services/${slug}/`,
       changefreq: 'monthly',
       priority: '0.8',
     }));
@@ -82,16 +82,16 @@ async function generate() {
 
   // Hubs, tools, comparisons, glossary
   for (const path of Object.keys(hubMeta)) {
-    entries.push(toUrlEntry({ loc: `${SITE_URL}${path}`, changefreq: 'monthly', priority: '0.8' }));
+    entries.push(toUrlEntry({ loc: `${SITE_URL}${path}/`, changefreq: 'monthly', priority: '0.8' }));
   }
   for (const slug of Object.keys(toolMeta)) {
-    entries.push(toUrlEntry({ loc: `${SITE_URL}/tools/${slug}`, changefreq: 'monthly', priority: '0.8' }));
+    entries.push(toUrlEntry({ loc: `${SITE_URL}/tools/${slug}/`, changefreq: 'monthly', priority: '0.8' }));
   }
   for (const slug of Object.keys(compareMeta)) {
-    entries.push(toUrlEntry({ loc: `${SITE_URL}/compare/popia-vs-gdpr/${slug}`, changefreq: 'monthly', priority: '0.7' }));
+    entries.push(toUrlEntry({ loc: `${SITE_URL}/compare/popia-vs-gdpr/${slug}/`, changefreq: 'monthly', priority: '0.7' }));
   }
   for (const slug of Object.keys(glossaryMeta)) {
-    entries.push(toUrlEntry({ loc: `${SITE_URL}/glossary/${slug}`, changefreq: 'yearly', priority: '0.5' }));
+    entries.push(toUrlEntry({ loc: `${SITE_URL}/glossary/${slug}/`, changefreq: 'yearly', priority: '0.5' }));
   }
 
   // Assessment pages
@@ -109,7 +109,7 @@ async function generate() {
       ? new Date(post.published_at).toISOString().split('T')[0]
       : undefined;
     entries.push(toUrlEntry({
-      loc: `${SITE_URL}/insights/${post.slug}`,
+      loc: `${SITE_URL}/insights/${post.slug}/`,
       lastmod,
       changefreq: 'monthly',
       priority: '0.6',

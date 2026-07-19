@@ -15,7 +15,7 @@ const template = readFileSync(resolve(dist, 'index.html'), 'utf-8');
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
 
 function renderShell({ path, title, description, robots = 'index,follow', ogType = 'website', image = DEFAULT_OG_IMAGE, jsonld }) {
-  const url = `${SITE_URL}${path === '/' ? '/' : path}`;
+  const url = `${SITE_URL}${path === '/' ? '/' : `${path}/`}`;
   let html = template
     .replace(/<title>[^<]*<\/title>/, `<title>${esc(title)}</title>`)
     .replace(/(<meta name="description" content=")[^"]*(")/, `$1${esc(description)}$2`)

@@ -194,7 +194,7 @@ const InsightPost = () => {
     }
     if (!post) return;
 
-    const url = `${SITE_URL}/insights/${slug}`;
+    const url = `${SITE_URL}/insights/${slug}/`;
     const title = `${post.title} | Securepath Consulting`;
     const description = post.excerpt || post.subtitle || post.title;
     const image = post.cover_image_url || FALLBACK_IMAGES[post.category] || DEFAULT_OG_IMAGE;
