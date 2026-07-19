@@ -1,44 +1,50 @@
 import { useState } from 'react';
 import ToolShell from '../../components/ToolShell';
+import Gated from '../../components/LeadCapture';
 
 // Decision tree: each node = question with options pointing to next node or result.
 const TREE = {
   start: {
     q: 'Which law applies to the affected data?',
+    help: 'Go by whose data was exposed, not where your servers are. South African customers or staff → POPIA. EU or UK individuals → GDPR / UK GDPR.',
     options: [
-      { label: 'POPIA (South Africa)', next: 'popia_access' },
-      { label: 'GDPR (EU) / UK GDPR', next: 'gdpr_breach' },
-      { label: 'Both', next: 'popia_access', note: 'Answer for POPIA first, then rerun for GDPR — obligations are cumulative.' },
+      { label: 'POPIA (South Africa)', hint: 'The affected people are in South Africa, or your organisation is SA-based.', next: 'popia_access' },
+      { label: 'GDPR (EU) / UK GDPR', hint: 'The affected people are in the EU or UK.', next: 'gdpr_breach' },
+      { label: 'Both', hint: 'Mixed database — SA plus EU/UK individuals. Obligations stack; you notify under both regimes.', next: 'popia_access', note: 'Answer for POPIA first, then rerun for GDPR — obligations are cumulative.' },
     ],
   },
   popia_access: {
     q: 'Are there reasonable grounds to believe personal information was accessed or acquired by an unauthorised person?',
+    help: '"Reasonable grounds" is a low bar — you don\'t need proof, just credible signs: ransomware note, data on a leak site, logs showing an intruder, a laptop or backup gone missing.',
     options: [
-      { label: 'Yes', next: 'popia_notify' },
-      { label: 'No — data stayed encrypted / no access occurred', result: 'popia_no' },
-      { label: 'Unsure', result: 'popia_investigate' },
+      { label: 'Yes', hint: 'Signs point to someone getting in or taking data — even if you\'re not 100% certain what they saw.', next: 'popia_notify' },
+      { label: 'No — data stayed encrypted / no access occurred', hint: 'Example: a stolen laptop with full-disk encryption and no sign the password was compromised, or an attack that was blocked before reaching data.', result: 'popia_no' },
+      { label: 'Unsure', hint: 'You know something happened but not yet what was touched. Common in the first hours of an incident.', result: 'popia_investigate' },
     ],
   },
   popia_notify: {
     q: 'Can the identity of affected data subjects be established?',
+    help: 'In other words: do you know (or can you work out) whose records were exposed? Usually yes — your own database tells you.',
     options: [
-      { label: 'Yes', result: 'popia_full' },
-      { label: 'No', result: 'popia_regulator_only' },
+      { label: 'Yes', hint: 'You can identify the affected customers, staff, or contacts.', result: 'popia_full' },
+      { label: 'No', hint: 'Genuinely unidentifiable — e.g. a stolen device holding unlabelled, mixed data you cannot map to people.', result: 'popia_regulator_only' },
     ],
   },
   gdpr_breach: {
     q: 'Is the breach likely to result in a risk to the rights and freedoms of individuals?',
+    help: 'Ask: could this hurt someone — identity theft, fraud, embarrassment, discrimination, physical danger? Exposed emails and ID numbers = yes. Properly encrypted data with safe keys = usually no.',
     options: [
-      { label: 'Yes', next: 'gdpr_high' },
-      { label: 'No — e.g. securely encrypted data, key not compromised', result: 'gdpr_document_only' },
-      { label: 'Unsure', result: 'gdpr_assume_risk' },
+      { label: 'Yes', hint: 'The exposed data could be used against people, or reveals something private about them.', next: 'gdpr_high' },
+      { label: 'No — e.g. securely encrypted data, key not compromised', hint: 'The data is unusable to whoever has it, or the incident was contained before exposure.', result: 'gdpr_document_only' },
+      { label: 'Unsure', hint: 'Still investigating scope. Under GDPR, uncertainty defaults to notifying — the clock does not wait.', result: 'gdpr_assume_risk' },
     ],
   },
   gdpr_high: {
     q: 'Is the risk to individuals HIGH (identity theft, fraud, discrimination, physical harm)?',
+    help: 'High risk = real potential for serious consequences: financial data, passwords, health records, children\'s data, or anything enabling impersonation. Exposed newsletter emails alone usually are not high risk.',
     options: [
-      { label: 'Yes', result: 'gdpr_full' },
-      { label: 'No', result: 'gdpr_regulator_only' },
+      { label: 'Yes', hint: 'Serious harm is realistically on the table for the people affected.', result: 'gdpr_full' },
+      { label: 'No', hint: 'A risk exists but limited — e.g. names and business emails without credentials or financial data.', result: 'gdpr_regulator_only' },
     ],
   },
 };
@@ -104,13 +110,13 @@ const BreachChecker = () => {
   return (
     <ToolShell
       slug="breach-notification-checker"
-      intro="Answer a few questions about the incident and find out whether you must notify the Information Regulator, your supervisory authority, or affected individuals — and how fast."
+      intro="Lost a laptop? Hit by ransomware? Emailed the wrong person? This walks you through — in plain English — whether the law requires you to report it, to whom, and how fast. No prior privacy knowledge needed."
     >
       <div className="space-y-8">
         {trail.length > 0 && (
           <div className="space-y-2">
             {trail.map((t, i) => (
-              <p key={i} className="text-xs font-mono text-primary/40">
+              <p key={i} className="text-sm font-mono text-primary/50">
                 {t.q} → <span className="text-accent">{t.a}</span>
               </p>
             ))}
@@ -119,37 +125,99 @@ const BreachChecker = () => {
 
         {!r ? (
           <div>
-            <p className="text-xl font-bold mb-6">{TREE[node].q}</p>
+            <p className="text-xl md:text-2xl font-bold mb-2">{TREE[node].q}</p>
+            <p className="text-sm text-primary/60 mb-6">{TREE[node].help}</p>
             <div className="space-y-2">
               {TREE[node].options.map((opt) => (
                 <button
                   key={opt.label}
                   onClick={() => answer(opt)}
-                  className="block w-full text-left p-5 rounded-lg border border-white/10 hover:border-accent/50 hover:bg-accent/5 transition-colors text-sm"
+                  className="block w-full text-left p-5 rounded-lg border border-white/10 hover:border-accent/50 hover:bg-accent/5 transition-colors"
                 >
-                  {opt.label}
-                  {opt.note && <span className="block text-xs text-primary/40 mt-1">{opt.note}</span>}
+                  <span className="block text-sm font-semibold">{opt.label}</span>
+                  <span className="block text-sm text-primary/65 leading-relaxed mt-1">{opt.hint}</span>
+                  {opt.note && <span className="block text-sm text-accent/70 mt-1">{opt.note}</span>}
                 </button>
               ))}
             </div>
           </div>
         ) : (
-          <div className={`p-8 rounded-lg border ${r.urgent ? 'border-red-500/30 bg-red-500/5' : 'border-accent/20 bg-[#0B0E14]'}`}>
-            <p className={`font-mono text-xs uppercase tracking-[0.2em] mb-3 ${r.urgent ? 'text-red-400' : 'text-accent/60'}`}>
-              {r.urgent ? '⚠ Action required' : 'Outcome'}
-            </p>
-            <h2 className="text-2xl font-bold mb-4">{r.title}</h2>
-            <p className="text-primary/70 text-sm leading-relaxed mb-6">{r.body}</p>
-            <button onClick={reset} className="border border-white/20 text-primary/60 px-6 py-3 rounded-full text-sm">
-              Start over
-            </button>
+          <div className="space-y-6">
+            <div className={`p-8 rounded-lg border ${r.urgent ? 'border-red-500/30 bg-red-500/5' : 'border-accent/20 bg-[#0B0E14]'}`}>
+              <p className={`font-mono text-xs uppercase tracking-[0.2em] mb-3 ${r.urgent ? 'text-red-400' : 'text-accent'}`}>
+                {r.urgent ? '⚠ Action required' : 'Outcome'}
+              </p>
+              <h2 className="text-2xl font-bold mb-4">{r.title}</h2>
+              <p className="text-primary/75 text-[15px] leading-relaxed mb-6">{r.body}</p>
+              <button onClick={reset} className="border border-white/20 text-primary/60 px-6 py-3 rounded-full text-sm">
+                Start over
+              </button>
+            </div>
+
+            <Gated
+              tool="breach-notification-checker"
+              context={{ trail, result }}
+              heading="Free: the first-72-hours breach response plan"
+              bullets={[
+                'Hour-by-hour: what to do in the first 24, 48, and 72 hours',
+                'Exactly what your Regulator/authority notification must contain (and the wording mistakes that invite investigation)',
+                'What to tell affected people — and what saying too much or too little costs you',
+              ]}
+              buttonLabel="Show the response plan"
+            >
+              <div className="p-8 bg-[#0B0E14] border border-accent/20 rounded-lg">
+                <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent mb-4">First-72-hours response plan</p>
+                <div className="space-y-6 text-[15px] text-primary/80 leading-relaxed">
+                  <div>
+                    <p className="font-bold mb-2">Hours 0–24: contain and preserve</p>
+                    <p className="text-primary/70">Isolate affected systems without wiping them — evidence first, rebuilding later. Reset compromised credentials, revoke suspicious sessions, and start a timestamped incident log (every decision, every time). Brief only the people who need to act; wide internal emails leak.</p>
+                  </div>
+                  <div>
+                    <p className="font-bold mb-2">Hours 24–48: assess scope</p>
+                    <p className="text-primary/70">Establish what data, whose, how many, and how sensitive. Pull access logs before they rotate. If you use an external IT provider or the breach started with a vendor, get their incident report in writing — under POPIA, operators must notify you immediately, and their failure is your evidence.</p>
+                  </div>
+                  <div>
+                    <p className="font-bold mb-2">Hours 48–72: notify</p>
+                    <p className="text-primary/70">Regulator notification must include: what happened, categories and estimated numbers affected, likely consequences, measures taken and planned, and a contact point. Don't speculate about causes you haven't confirmed, and don't minimise — "no evidence of misuse" reads very differently from "no misuse". Notify affected people in plain language with concrete steps they can take (change passwords, watch statements, fraud alerts).</p>
+                  </div>
+                  <div>
+                    <p className="font-bold mb-2">After: close the loop</p>
+                    <p className="text-primary/70">File everything in your breach register, run a root-cause review, and fix the control that failed. Regulators judge the response as hard as the breach — a clean, documented response is your best mitigation against fines.</p>
+                  </div>
+                </div>
+                <p className="text-primary/70 text-sm mt-6">
+                  In an active incident and want help? Our <a href="/services/cybersecurity-services" className="text-accent hover:underline">Cybersecurity Services</a> cover
+                  incident response planning, and a <a href="/services/security-posture-assessment" className="text-accent hover:underline">Security Posture Assessment</a> finds
+                  the gaps before the next one.
+                </p>
+              </div>
+            </Gated>
           </div>
         )}
 
-        <p className="text-primary/40 text-xs leading-relaxed">
-          General guidance based on POPIA section 22 and GDPR articles 33–34, not legal advice.
-          Sector rules (banking, health, telecoms) may add notification duties on top of these.
-        </p>
+        <div className="border-t border-white/5 pt-6">
+          <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary/40 mb-3">Sources</p>
+          <ul className="space-y-1.5 text-sm text-primary/60">
+            <li>
+              <a href="https://www.gov.za/documents/protection-personal-information-act" target="_blank" rel="noopener noreferrer" className="text-accent/70 hover:text-accent hover:underline">POPIA section 22</a>{' '}
+              — security compromise notification duties, and the{' '}
+              <a href="https://inforegulator.org.za" target="_blank" rel="noopener noreferrer" className="text-accent/70 hover:text-accent hover:underline">Information Regulator's</a>{' '}
+              eServices portal / SCN1 breach form
+            </li>
+            <li>
+              <a href="https://gdpr-info.eu/art-33-gdpr/" target="_blank" rel="noopener noreferrer" className="text-accent/70 hover:text-accent hover:underline">GDPR Articles 33–34</a>{' '}
+              — 72-hour authority notification and high-risk individual notification
+            </li>
+            <li>
+              <a href="https://ico.org.uk/for-organisations/report-a-breach/" target="_blank" rel="noopener noreferrer" className="text-accent/70 hover:text-accent hover:underline">ICO breach reporting</a>{' '}
+              — UK reporting thresholds and the online reporting service
+            </li>
+          </ul>
+          <p className="text-primary/55 text-sm mt-3 leading-relaxed">
+            General guidance based on POPIA section 22 and GDPR articles 33–34, not legal advice.
+            Sector rules (banking, health, telecoms) may add notification duties on top of these.
+          </p>
+        </div>
       </div>
     </ToolShell>
   );
