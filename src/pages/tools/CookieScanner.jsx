@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import ToolShell from '../../components/ToolShell';
 import { supabase } from '../../utils/supabase';
+import Gated from '../../components/LeadCapture';
 
 const CATEGORY_NOTES = {
   Advertising: 'Requires prior consent in the EU/UK. Under POPIA, behavioural advertising needs a lawful basis and clear notice — consent is the safe route.',
@@ -42,7 +43,7 @@ const CookieScanner = () => {
   return (
     <ToolShell
       slug="cookie-scanner"
-      intro="Enter any website address. We fetch the page and detect known analytics, advertising, and tracking scripts — then tell you what that means for consent requirements."
+      intro="Most websites quietly load trackers their owners forgot about — analytics, ad pixels, chat widgets — each one collecting visitor data with legal strings attached. Enter any address (yours, or a competitor's) and see what it really loads, in plain English."
     >
       <div className="space-y-8">
         <div className="flex gap-3 max-w-xl">
@@ -90,7 +91,7 @@ const CookieScanner = () => {
                       <span className="font-bold text-sm">{t.name}</span>
                       <span className="font-mono text-xs text-accent/70 uppercase tracking-widest">{t.category}</span>
                     </div>
-                    <p className="text-primary/50 text-xs leading-relaxed">{CATEGORY_NOTES[t.category]}</p>
+                    <p className="text-primary/65 text-sm leading-relaxed">{CATEGORY_NOTES[t.category]}</p>
                   </div>
                 ))}
               </div>
@@ -106,12 +107,67 @@ const CookieScanner = () => {
               </div>
             )}
 
-            <p className="text-primary/40 text-xs leading-relaxed">
+            <p className="text-primary/55 text-sm leading-relaxed">
               Static scan of the page source only — scripts loaded dynamically after page render (e.g. via tag
               managers) may not be detected. A full audit requires rendering the site with a browser.
             </p>
+
+            <Gated
+              tool="cookie-scanner"
+              context={{ url: result.finalUrl, trackers: trackers.map((t) => t.name), consentTool: result.hasConsentTool }}
+              heading="Free: the cookie compliance fix plan"
+              bullets={[
+                'What a compliant consent banner must actually do (most block nothing)',
+                'The exact disclosures your privacy policy needs for each tracker type found',
+                'How to audit what fires through Google Tag Manager — where hidden trackers live',
+              ]}
+              buttonLabel="Show the fix plan"
+            >
+              <div className="p-8 bg-[#0B0E14] border border-accent/20 rounded-lg">
+                <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent mb-4">Cookie compliance fix plan</p>
+                <div className="space-y-6 text-[15px] text-primary/80 leading-relaxed">
+                  <div>
+                    <p className="font-bold mb-2">1. A banner that actually blocks</p>
+                    <p className="text-primary/70">The legal test is prior consent: non-essential trackers must not fire until the visitor says yes. Most banners fail this — they announce cookies while everything loads anyway. Test yours: open your site in a private window, decline, and check the network tab for analytics/ad requests. "Reject all" must be as easy as "Accept all", and declining can't degrade the site.</p>
+                  </div>
+                  <div>
+                    <p className="font-bold mb-2">2. Disclose what you found</p>
+                    <p className="text-primary/70">Your privacy policy needs, per tracker: who runs it, what it collects, why, and where the data goes (most send data outside South Africa — that's a section 72 transfer). Our free privacy policy generator produces the cookie section for you.</p>
+                  </div>
+                  <div>
+                    <p className="font-bold mb-2">3. Audit your tag manager</p>
+                    <p className="text-primary/70">If Google Tag Manager is present, this scan sees the container but not what fires through it. Log into GTM, list every active tag, and delete what nobody claims — abandoned pixels from old campaigns are the most common finding. Then connect your consent tool to GTM's consent mode so tags respect the banner.</p>
+                  </div>
+                </div>
+                <p className="text-primary/70 text-sm mt-6">
+                  Want a rendered, page-by-page audit instead of a source scan? Our <a href="/services/privacy-audit" className="text-accent hover:underline">Privacy Audit</a> includes
+                  full website and cookie compliance review.
+                </p>
+              </div>
+            </Gated>
           </div>
         )}
+
+        <div className="border-t border-white/5 pt-6">
+          <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary/40 mb-3">Sources</p>
+          <ul className="space-y-1.5 text-sm text-primary/60">
+            <li>
+              <a href="https://www.gov.za/documents/protection-personal-information-act" target="_blank" rel="noopener noreferrer" className="text-accent/70 hover:text-accent hover:underline">POPIA</a>{' '}
+              — s11 (lawful basis for tracking that processes personal information), s69 (electronic marketing), s72 (offshore analytics/ad platforms)
+            </li>
+            <li>
+              <a href="https://ico.org.uk/for-organisations/direct-marketing-and-privacy-and-electronic-communications/guide-to-pecr/cookies-and-similar-technologies/" target="_blank" rel="noopener noreferrer" className="text-accent/70 hover:text-accent hover:underline">ICO cookies guidance (PECR)</a>{' '}
+              — the UK/EU prior-consent standard for non-essential cookies
+            </li>
+            <li>
+              <a href="https://gdpr-info.eu/art-7-gdpr/" target="_blank" rel="noopener noreferrer" className="text-accent/70 hover:text-accent hover:underline">GDPR Article 7</a>{' '}
+              — conditions for valid consent (freely given, specific, informed, withdrawable)
+            </li>
+          </ul>
+          <p className="text-primary/55 text-sm mt-3 leading-relaxed">
+            Detection is signature-based across 25 common trackers — absence of findings is not proof of compliance.
+          </p>
+        </div>
       </div>
     </ToolShell>
   );
